@@ -5,5 +5,5 @@ abstract class MoodRepository {
   Future<List<MoodEntry>> getMoods();
   Future<List<MoodEntry>> getMoodsByDate(DateTime date);
   Future<MoodEntry> addMood({required MoodScore score, String? note});
-  Future<void> deleteMood(String id);
+  Future<void> deleteMood(int id);
 }

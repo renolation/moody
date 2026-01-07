@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../../core/enums/activity_type.dart';
 
-class ActivityEntry {
-  final String id;
+class ActivityEntry extends Equatable {
+  final int id;
   final ActivityType type;
   final int duration; // in minutes
   final int intensity; // 1-3
@@ -16,7 +18,7 @@ class ActivityEntry {
   });
 
   ActivityEntry copyWith({
-    String? id,
+    int? id,
     ActivityType? type,
     int? duration,
     int? intensity,
@@ -30,4 +32,7 @@ class ActivityEntry {
       timestamp: timestamp ?? this.timestamp,
     );
   }
+
+  @override
+  List<Object?> get props => [id, type, duration, intensity, timestamp];
 }

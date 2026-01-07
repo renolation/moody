@@ -1,4 +1,6 @@
-class DayMoodStats {
+import 'package:equatable/equatable.dart';
+
+class DayMoodStats extends Equatable {
   final DateTime date;
   final double? averageMood;
   final int moodCount;
@@ -10,9 +12,12 @@ class DayMoodStats {
     this.moodCount = 0,
     this.exerciseMinutes = 0,
   });
+
+  @override
+  List<Object?> get props => [date, averageMood, moodCount, exerciseMinutes];
 }
 
-class MonthlyStats {
+class MonthlyStats extends Equatable {
   final int year;
   final int month;
   final double averageMood;
@@ -28,9 +33,19 @@ class MonthlyStats {
     required this.totalMoods,
     required this.totalExerciseMinutes,
   });
+
+  @override
+  List<Object?> get props => [
+        year,
+        month,
+        averageMood,
+        dailyStats,
+        totalMoods,
+        totalExerciseMinutes,
+      ];
 }
 
-class WeeklyCorrelation {
+class WeeklyCorrelation extends Equatable {
   final List<DayCorrelation> days;
   final double? correlationScore;
   final String? insight;
@@ -40,9 +55,12 @@ class WeeklyCorrelation {
     this.correlationScore,
     this.insight,
   });
+
+  @override
+  List<Object?> get props => [days, correlationScore, insight];
 }
 
-class DayCorrelation {
+class DayCorrelation extends Equatable {
   final String dayName;
   final double? moodScore;
   final int exerciseMinutes;
@@ -52,4 +70,7 @@ class DayCorrelation {
     this.moodScore,
     this.exerciseMinutes = 0,
   });
+
+  @override
+  List<Object?> get props => [dayName, moodScore, exerciseMinutes];
 }

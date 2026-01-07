@@ -1,5 +1,7 @@
-class Quote {
-  final String id;
+import 'package:equatable/equatable.dart';
+
+class Quote extends Equatable {
+  final int id;
   final String text;
   final String? author;
   final bool isFavorite;
@@ -12,7 +14,7 @@ class Quote {
   });
 
   Quote copyWith({
-    String? id,
+    int? id,
     String? text,
     String? author,
     bool? isFavorite,
@@ -24,4 +26,7 @@ class Quote {
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
+
+  @override
+  List<Object?> get props => [id, text, author, isFavorite];
 }

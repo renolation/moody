@@ -1,67 +1,31 @@
+import 'package:hive_ce/hive.dart';
+
 import '../models/sound_model.dart';
 
+/// Remote data source using Hive as API simulator
+/// TODO: Replace Hive implementation with real API calls when backend is ready
 abstract class SoundRemoteDataSource {
   Future<List<SoundModel>> getSounds();
+  Future<void> initializeSounds(List<SoundModel> sounds);
 }
 
 class SoundRemoteDataSourceImpl implements SoundRemoteDataSource {
-  // Mock data simulating API response
-  static final List<SoundModel> _defaultSounds = [
-    SoundModel(
-      id: 'rain',
-      name: 'Rain',
-      icon: 'water_drop',
-      assetPath: 'assets/sounds/rain.mp3',
-    ),
-    SoundModel(
-      id: 'forest',
-      name: 'Forest',
-      icon: 'forest',
-      assetPath: 'assets/sounds/forest.mp3',
-    ),
-    SoundModel(
-      id: 'ocean',
-      name: 'Ocean Waves',
-      icon: 'waves',
-      assetPath: 'assets/sounds/ocean.mp3',
-    ),
-    SoundModel(
-      id: 'fire',
-      name: 'Fireplace',
-      icon: 'local_fire_department',
-      assetPath: 'assets/sounds/fire.mp3',
-    ),
-    SoundModel(
-      id: 'wind',
-      name: 'Wind',
-      icon: 'air',
-      assetPath: 'assets/sounds/wind.mp3',
-    ),
-    SoundModel(
-      id: 'birds',
-      name: 'Birds',
-      icon: 'flutter_dash',
-      assetPath: 'assets/sounds/birds.mp3',
-    ),
-    SoundModel(
-      id: 'thunder',
-      name: 'Thunder',
-      icon: 'thunderstorm',
-      assetPath: 'assets/sounds/thunder.mp3',
-      isPremium: true,
-    ),
-    SoundModel(
-      id: 'stream',
-      name: 'Stream',
-      icon: 'water',
-      assetPath: 'assets/sounds/stream.mp3',
-      isPremium: true,
-    ),
-  ];
+  static const String boxName = 'sounds';
+
+  Box<SoundModel> get _box => Hive.box<SoundModel>(boxName);
 
   @override
   Future<List<SoundModel>> getSounds() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return List.from(_defaultSounds);
+    await Future.delayed(const Duration(milliseconds: 200));
+    return _box.values.toList();
+  }
+
+  @override
+  Future<void> initializeSounds(List<SoundModel> sounds) async {
+    if (_box.isEmpty) {
+      for (final sound in sounds) {
+        await _box.put(sound.id, sound);
+      }
+    }
   }
 }

@@ -56,7 +56,7 @@ class TodayMoods extends _$TodayMoods {
     ref.invalidateSelf();
   }
 
-  Future<void> removeMood(String id) async {
+  Future<void> removeMood(int id) async {
     final repository = ref.read(moodRepositoryProvider);
     await repository.deleteMood(id);
     ref.invalidateSelf();
@@ -77,7 +77,7 @@ class TodayActivities extends _$TodayActivities {
     ref.invalidateSelf();
   }
 
-  Future<void> removeActivity(String id) async {
+  Future<void> removeActivity(int id) async {
     final repository = ref.read(activityRepositoryProvider);
     await repository.deleteActivity(id);
     ref.invalidateSelf();

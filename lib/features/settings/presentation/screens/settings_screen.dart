@@ -9,6 +9,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/glass_panel.dart';
+import '../../../../core/data/mock_data_initializer.dart';
 import '../providers/settings_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -214,6 +215,20 @@ class SettingsScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: AppDimensions.spacingXl),
+
+              // Developer Section
+              _SectionHeader(title: 'DEVELOPER'),
+              const SizedBox(height: AppDimensions.spacingSm),
+              GlassPanel(
+                padding: EdgeInsets.zero,
+                child: _SettingsButton(
+                  icon: Icons.science,
+                  iconColor: Colors.orange,
+                  title: 'Load Demo Data',
+                  onTap: () => _loadDemoData(context, ref),
+                ),
+              ),
               const SizedBox(height: AppDimensions.spacingXxl),
 
               // Version
@@ -261,6 +276,98 @@ class SettingsScreen extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Export failed: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _loadDemoData(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.darkBgSecondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Load Demo Data?',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: const Text(
+          'This will add sample moods, activities, and gratitude entries to help you explore the app.',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text(
+              'Load',
+              style: TextStyle(color: AppColors.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    HapticFeedback.mediumImpact();
+
+    // Show loading snackbar instead of dialog to avoid navigator issues
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            ),
+            SizedBox(width: 16),
+            Text('Loading demo data...'),
+          ],
+        ),
+        backgroundColor: AppColors.sage600,
+        duration: Duration(seconds: 10),
+      ),
+    );
+
+    try {
+      await initializeMockData();
+
+      if (context.mounted) {
+        // Clear loading snackbar and show success
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+        // Invalidate providers to refresh data
+        ref.invalidate(settingsProvider);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Demo data loaded successfully!'),
+            backgroundColor: AppColors.sage600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load demo data: $e'),
             backgroundColor: AppColors.error,
           ),
         );

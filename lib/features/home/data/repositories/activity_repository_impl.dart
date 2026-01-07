@@ -17,16 +17,8 @@ class ActivityRepositoryImpl implements ActivityRepository {
 
   @override
   Future<List<ActivityEntry>> getActivitiesByDate(DateTime date) async {
-    final models = await remoteDataSource.getActivities();
-    return models
-        .where((m) {
-          final activityDate = DateTime.parse(m.timestamp);
-          return activityDate.year == date.year &&
-              activityDate.month == date.month &&
-              activityDate.day == date.day;
-        })
-        .map((m) => m.toEntity())
-        .toList();
+    final models = await remoteDataSource.getActivitiesByDate(date);
+    return models.map((m) => m.toEntity()).toList();
   }
 
   @override
@@ -34,18 +26,19 @@ class ActivityRepositoryImpl implements ActivityRepository {
     required ActivityType type,
     int duration = 30,
   }) async {
+    final id = await remoteDataSource.getNextId();
     final model = ActivityEntryModel(
-      id: '',
+      id: id,
       type: type.name,
       duration: duration,
-      timestamp: DateTime.now().toIso8601String(),
+      timestamp: DateTime.now(),
     );
     final result = await remoteDataSource.addActivity(model);
     return result.toEntity();
   }
 
   @override
-  Future<void> deleteActivity(String id) async {
+  Future<void> deleteActivity(int id) async {
     await remoteDataSource.deleteActivity(id);
   }
 }

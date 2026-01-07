@@ -1,17 +1,39 @@
+import 'package:hive_ce/hive.dart';
+
 import '../../domain/entities/user_settings.dart';
 
-class SettingsModel {
+part 'user_settings_model.g.dart';
+
+@HiveType(typeId: 5)
+class UserSettingsModel extends HiveObject {
+  @HiveField(0)
   final String userName;
+
+  @HiveField(1)
   final String? userEmail;
+
+  @HiveField(2)
   final bool isVip;
+
+  @HiveField(3)
   final bool healthSyncEnabled;
+
+  @HiveField(4)
   final int dailyQuoteHour;
+
+  @HiveField(5)
   final int dailyQuoteMinute;
+
+  @HiveField(6)
   final int moodReminderHour;
+
+  @HiveField(7)
   final int moodReminderMinute;
+
+  @HiveField(8)
   final String theme;
 
-  SettingsModel({
+  UserSettingsModel({
     this.userName = 'Alex',
     this.userEmail,
     this.isVip = false,
@@ -23,8 +45,8 @@ class SettingsModel {
     this.theme = 'dark',
   });
 
-  factory SettingsModel.fromJson(Map<String, dynamic> json) {
-    return SettingsModel(
+  factory UserSettingsModel.fromJson(Map<String, dynamic> json) {
+    return UserSettingsModel(
       userName: json['userName'] as String? ?? 'Alex',
       userEmail: json['userEmail'] as String?,
       isVip: json['isVip'] as bool? ?? false,
@@ -65,8 +87,8 @@ class SettingsModel {
     );
   }
 
-  factory SettingsModel.fromEntity(UserSettings entity) {
-    return SettingsModel(
+  factory UserSettingsModel.fromEntity(UserSettings entity) {
+    return UserSettingsModel(
       userName: entity.userName,
       userEmail: entity.userEmail,
       isVip: entity.isVip,

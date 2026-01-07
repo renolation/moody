@@ -1,25 +1,42 @@
+import 'package:hive_ce/hive.dart';
+
 import '../../../../core/enums/mood_score.dart';
 import '../../domain/entities/mood_entry.dart';
 
-class MoodEntryModel {
-  final String id;
+part 'mood_entry_model.g.dart';
+
+@HiveType(typeId: 0)
+class MoodEntryModel extends HiveObject {
+  @HiveField(0)
+  final int id;
+
+  @HiveField(1)
   final int score;
+
+  @HiveField(2)
   final String? note;
-  final String timestamp;
+
+  @HiveField(3)
+  final List<String> tags;
+
+  @HiveField(4)
+  final DateTime timestamp;
 
   MoodEntryModel({
     required this.id,
     required this.score,
     this.note,
+    this.tags = const [],
     required this.timestamp,
   });
 
   factory MoodEntryModel.fromJson(Map<String, dynamic> json) {
     return MoodEntryModel(
-      id: json['id'] as String,
+      id: json['id'] as int,
       score: json['score'] as int,
       note: json['note'] as String?,
-      timestamp: json['timestamp'] as String,
+      tags: (json['tags'] as List?)?.cast<String>() ?? [],
+      timestamp: DateTime.parse(json['timestamp'] as String),
     );
   }
 
@@ -28,7 +45,8 @@ class MoodEntryModel {
       'id': id,
       'score': score,
       'note': note,
-      'timestamp': timestamp,
+      'tags': tags,
+      'timestamp': timestamp.toIso8601String(),
     };
   }
 
@@ -37,7 +55,8 @@ class MoodEntryModel {
       id: id,
       score: MoodScore.values.firstWhere((e) => e.value == score),
       note: note,
-      timestamp: DateTime.parse(timestamp),
+      tags: tags,
+      timestamp: timestamp,
     );
   }
 
@@ -46,7 +65,8 @@ class MoodEntryModel {
       id: entity.id,
       score: entity.score.value,
       note: entity.note,
-      timestamp: entity.timestamp.toIso8601String(),
+      tags: entity.tags,
+      timestamp: entity.timestamp,
     );
   }
 }

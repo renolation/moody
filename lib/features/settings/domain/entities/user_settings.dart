@@ -1,4 +1,6 @@
-class UserSettings {
+import 'package:equatable/equatable.dart';
+
+class UserSettings extends Equatable {
   final String userName;
   final String? userEmail;
   final bool isVip;
@@ -44,4 +46,17 @@ class UserSettings {
       theme: theme ?? this.theme,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        userName,
+        userEmail,
+        isVip,
+        healthSyncEnabled,
+        dailyQuoteHour,
+        dailyQuoteMinute,
+        moodReminderHour,
+        moodReminderMinute,
+        theme,
+      ];
 }

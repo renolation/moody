@@ -1,11 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/enums/mood_score.dart';
+
 import '../../../../core/enums/activity_type.dart';
+import '../../../../core/enums/mood_score.dart';
 
 enum JourneyItemType { mood, activity }
 
-class JourneyItem {
-  final String id;
+class JourneyItem extends Equatable {
+  final int id;
   final JourneyItemType type;
   final DateTime timestamp;
   final String title;
@@ -26,7 +28,7 @@ class JourneyItem {
   });
 
   factory JourneyItem.fromMood({
-    required String id,
+    required int id,
     required MoodScore score,
     required DateTime timestamp,
     String? note,
@@ -43,7 +45,7 @@ class JourneyItem {
   }
 
   factory JourneyItem.fromActivity({
-    required String id,
+    required int id,
     required ActivityType activityType,
     required int duration,
     required DateTime timestamp,
@@ -58,4 +60,16 @@ class JourneyItem {
       duration: duration,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        type,
+        timestamp,
+        title,
+        icon,
+        moodScore,
+        activityType,
+        duration,
+      ];
 }

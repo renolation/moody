@@ -1,9 +1,19 @@
+import 'package:hive_ce/hive.dart';
+
 import '../../domain/entities/gratitude_entry.dart';
 
-class GratitudeEntryModel {
-  final String id;
+part 'gratitude_entry_model.g.dart';
+
+@HiveType(typeId: 3)
+class GratitudeEntryModel extends HiveObject {
+  @HiveField(0)
+  final int id;
+
+  @HiveField(1)
   final List<String> items;
-  final String date;
+
+  @HiveField(2)
+  final DateTime date;
 
   GratitudeEntryModel({
     required this.id,
@@ -13,9 +23,9 @@ class GratitudeEntryModel {
 
   factory GratitudeEntryModel.fromJson(Map<String, dynamic> json) {
     return GratitudeEntryModel(
-      id: json['id'] as String,
+      id: json['id'] as int,
       items: List<String>.from(json['items'] as List),
-      date: json['date'] as String,
+      date: DateTime.parse(json['date'] as String),
     );
   }
 
@@ -23,7 +33,7 @@ class GratitudeEntryModel {
     return {
       'id': id,
       'items': items,
-      'date': date,
+      'date': date.toIso8601String(),
     };
   }
 
@@ -31,7 +41,15 @@ class GratitudeEntryModel {
     return GratitudeEntry(
       id: id,
       items: items,
-      date: DateTime.parse(date),
+      date: date,
+    );
+  }
+
+  factory GratitudeEntryModel.fromEntity(GratitudeEntry entity) {
+    return GratitudeEntryModel(
+      id: entity.id,
+      items: entity.items,
+      date: entity.date,
     );
   }
 }

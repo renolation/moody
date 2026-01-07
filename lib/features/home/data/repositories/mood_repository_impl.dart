@@ -17,32 +17,25 @@ class MoodRepositoryImpl implements MoodRepository {
 
   @override
   Future<List<MoodEntry>> getMoodsByDate(DateTime date) async {
-    final models = await remoteDataSource.getMoods();
-    return models
-        .where((m) {
-          final moodDate = DateTime.parse(m.timestamp);
-          return moodDate.year == date.year &&
-              moodDate.month == date.month &&
-              moodDate.day == date.day;
-        })
-        .map((m) => m.toEntity())
-        .toList();
+    final models = await remoteDataSource.getMoodsByDate(date);
+    return models.map((m) => m.toEntity()).toList();
   }
 
   @override
   Future<MoodEntry> addMood({required MoodScore score, String? note}) async {
+    final id = await remoteDataSource.getNextId();
     final model = MoodEntryModel(
-      id: '',
+      id: id,
       score: score.value,
       note: note,
-      timestamp: DateTime.now().toIso8601String(),
+      timestamp: DateTime.now(),
     );
     final result = await remoteDataSource.addMood(model);
     return result.toEntity();
   }
 
   @override
-  Future<void> deleteMood(String id) async {
+  Future<void> deleteMood(int id) async {
     await remoteDataSource.deleteMood(id);
   }
 }

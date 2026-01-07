@@ -15,15 +15,12 @@ class QuoteRepositoryImpl implements QuoteRepository {
 
   @override
   Future<Quote> getDailyQuote() async {
-    final quotes = await getQuotes();
-    final dayOfYear = DateTime.now()
-        .difference(DateTime(DateTime.now().year, 1, 1))
-        .inDays;
-    return quotes[dayOfYear % quotes.length];
+    final model = await remoteDataSource.getQuoteOfTheDay();
+    return model.toEntity();
   }
 
   @override
-  Future<void> toggleFavorite(String id) async {
+  Future<void> toggleFavorite(int id) async {
     await remoteDataSource.toggleFavorite(id);
   }
 }

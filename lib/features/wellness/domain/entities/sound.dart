@@ -1,5 +1,7 @@
-class Sound {
-  final String id;
+import 'package:equatable/equatable.dart';
+
+class Sound extends Equatable {
+  final int id;
   final String name;
   final String icon;
   final String assetPath;
@@ -12,4 +14,7 @@ class Sound {
     required this.assetPath,
     this.isPremium = false,
   });
+
+  @override
+  List<Object?> get props => [id, name, icon, assetPath, isPremium];
 }

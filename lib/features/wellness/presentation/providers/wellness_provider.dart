@@ -63,7 +63,7 @@ class Quotes extends _$Quotes {
     return repository.getQuotes();
   }
 
-  Future<void> toggleFavorite(String id) async {
+  Future<void> toggleFavorite(int id) async {
     final repository = ref.read(quoteRepositoryProvider);
     await repository.toggleFavorite(id);
     ref.invalidateSelf();
@@ -99,9 +99,9 @@ Future<List<Sound>> sounds(Ref ref) async {
 @riverpod
 class CurrentlyPlaying extends _$CurrentlyPlaying {
   @override
-  String? build() => null;
+  int? build() => null;
 
-  void play(String soundId) {
+  void play(int soundId) {
     state = soundId;
   }
 
@@ -109,7 +109,7 @@ class CurrentlyPlaying extends _$CurrentlyPlaying {
     state = null;
   }
 
-  void toggle(String soundId) {
+  void toggle(int soundId) {
     if (state == soundId) {
       state = null;
     } else {

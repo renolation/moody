@@ -1,9 +1,21 @@
+import 'package:hive_ce/hive.dart';
+
 import '../../domain/entities/quote.dart';
 
-class QuoteModel {
-  final String id;
+part 'quote_model.g.dart';
+
+@HiveType(typeId: 2)
+class QuoteModel extends HiveObject {
+  @HiveField(0)
+  final int id;
+
+  @HiveField(1)
   final String text;
+
+  @HiveField(2)
   final String? author;
+
+  @HiveField(3)
   final bool isFavorite;
 
   QuoteModel({
@@ -15,7 +27,7 @@ class QuoteModel {
 
   factory QuoteModel.fromJson(Map<String, dynamic> json) {
     return QuoteModel(
-      id: json['id'] as String,
+      id: json['id'] as int,
       text: json['text'] as String,
       author: json['author'] as String?,
       isFavorite: json['isFavorite'] as bool? ?? false,
@@ -37,6 +49,15 @@ class QuoteModel {
       text: text,
       author: author,
       isFavorite: isFavorite,
+    );
+  }
+
+  factory QuoteModel.fromEntity(Quote entity) {
+    return QuoteModel(
+      id: entity.id,
+      text: entity.text,
+      author: entity.author,
+      isFavorite: entity.isFavorite,
     );
   }
 

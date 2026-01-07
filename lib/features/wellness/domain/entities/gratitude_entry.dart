@@ -1,5 +1,7 @@
-class GratitudeEntry {
-  final String id;
+import 'package:equatable/equatable.dart';
+
+class GratitudeEntry extends Equatable {
+  final int id;
   final List<String> items;
   final DateTime date;
 
@@ -10,7 +12,7 @@ class GratitudeEntry {
   });
 
   GratitudeEntry copyWith({
-    String? id,
+    int? id,
     List<String>? items,
     DateTime? date,
   }) {
@@ -20,4 +22,7 @@ class GratitudeEntry {
       date: date ?? this.date,
     );
   }
+
+  @override
+  List<Object?> get props => [id, items, date];
 }

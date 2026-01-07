@@ -136,7 +136,7 @@ final soundsProvider = AutoDisposeFutureProvider<List<Sound>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SoundsRef = AutoDisposeFutureProviderRef<List<Sound>>;
-String _$quotesHash() => r'95035a5ac9589bec345bb52cb9df70f885168577';
+String _$quotesHash() => r'c3238e19c09ffadd10d9e41c8bbea1a9f67bc311';
 
 /// See also [Quotes].
 @ProviderFor(Quotes)
@@ -171,12 +171,12 @@ final gratitudeEntriesProvider =
     );
 
 typedef _$GratitudeEntries = AutoDisposeAsyncNotifier<List<GratitudeEntry>>;
-String _$currentlyPlayingHash() => r'271904477fafc570eb2236004884d8c3c9ed65e1';
+String _$currentlyPlayingHash() => r'b52ea407a5ad61f463dba03c0af77fe7b97c6b30';
 
 /// See also [CurrentlyPlaying].
 @ProviderFor(CurrentlyPlaying)
 final currentlyPlayingProvider =
-    AutoDisposeNotifierProvider<CurrentlyPlaying, String?>.internal(
+    AutoDisposeNotifierProvider<CurrentlyPlaying, int?>.internal(
       CurrentlyPlaying.new,
       name: r'currentlyPlayingProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -186,7 +186,7 @@ final currentlyPlayingProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$CurrentlyPlaying = AutoDisposeNotifier<String?>;
+typedef _$CurrentlyPlaying = AutoDisposeNotifier<int?>;
 String _$breathingSessionHash() => r'06ce230abad7380a1120d0206e6b9b04dc360d53';
 
 /// See also [BreathingSession].
