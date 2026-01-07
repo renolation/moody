@@ -93,25 +93,38 @@ class WellnessBentoGrid extends StatelessWidget {
                     onTap: () => context.push('/quotes'),
                     child: GlassPanel(
                       padding: const EdgeInsets.all(AppDimensions.spacingMd),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Icon(
-                            Icons.format_quote,
-                            color: AppColors.accent,
-                            size: 26,
-                          ),
-                          const Text(
-                            'Daily Quotes\nGallery',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimary,
-                              height: 1.3,
+                      child: SizedBox.expand(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.glassBackground,
+                                border: Border.all(
+                                  color: AppColors.glassBorder,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.format_quote,
+                                color: AppColors.accent,
+                                size: 20,
+                              ),
                             ),
-                          ),
-                        ],
+                            const Text(
+                              'Daily Quotes\nGallery',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textPrimary,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -122,25 +135,38 @@ class WellnessBentoGrid extends StatelessWidget {
                     onTap: () => context.push('/gratitude'),
                     child: GlassPanel(
                       padding: const EdgeInsets.all(AppDimensions.spacingMd),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Icon(
-                            Icons.edit_note,
-                            color: AppColors.accent,
-                            size: 26,
-                          ),
-                          const Text(
-                            'Gratitude\nJournal',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimary,
-                              height: 1.3,
+                      child: SizedBox.expand(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.glassBackground,
+                                border: Border.all(
+                                  color: AppColors.glassBorder,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                color: AppColors.accent,
+                                size: 20,
+                              ),
                             ),
-                          ),
-                        ],
+                            const Text(
+                              'Gratitude\nJournal',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textPrimary,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

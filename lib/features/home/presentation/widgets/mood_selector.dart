@@ -87,10 +87,11 @@ class _MoodSelectorState extends ConsumerState<MoodSelector> {
             const SizedBox(height: AppDimensions.spacingLg),
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
+              child: SizedBox(
+                height: 48,
+                child: Stack(
+                  children: [
+                    TextField(
                       controller: _noteController,
                       style: const TextStyle(
                         color: AppColors.textPrimary,
@@ -98,6 +99,9 @@ class _MoodSelectorState extends ConsumerState<MoodSelector> {
                       ),
                       decoration: InputDecoration(
                         hintText: AppStrings.addNote,
+                        hintStyle: TextStyle(
+                          color: AppColors.textMuted.withValues(alpha: 0.7),
+                        ),
                         filled: true,
                         fillColor: AppColors.sage900.withValues(alpha: 0.4),
                         border: OutlineInputBorder(
@@ -112,33 +116,44 @@ class _MoodSelectorState extends ConsumerState<MoodSelector> {
                             color: AppColors.glassBorder,
                           ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: AppColors.sage500,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.only(
+                          left: 16,
+                          right: 52,
+                          top: 14,
+                          bottom: 14,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: AppDimensions.spacingSm),
-                  Material(
-                    color: AppColors.sage600,
-                    borderRadius: BorderRadius.circular(12),
-                    child: InkWell(
-                      onTap: _submitMood,
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 20,
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Material(
+                        color: AppColors.sage600,
+                        borderRadius: BorderRadius.circular(8),
+                        child: InkWell(
+                          onTap: _submitMood,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
