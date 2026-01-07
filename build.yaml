@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      riverpod_generator:
+        options:
+          provider_name_prefix: ""
+          provider_family_name_prefix: ""
