@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mood Holder Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13daec",
+                        "secondary": "#a5d6a7","background-light": "#f6f8f8",
+                        "background-dark": "#102022",
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                        "glass-surface": "rgba(255, 255, 255, 0.03)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }.glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-background-dark">
+<div class="relative min-h-screen w-full overflow-x-hidden flex flex-col">
+<div class="fixed inset-0 z-0 pointer-events-none">
+<div class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-[#13daec] rounded-full mix-blend-screen filter blur-[120px] opacity-[0.15]"></div>
+<div class="absolute bottom-[10%] left-[-10%] w-[350px] h-[350px] bg-[#547c7f] rounded-full mix-blend-screen filter blur-[100px] opacity-[0.1]"></div>
+<div class="absolute top-[40%] left-[20%] w-[300px] h-[300px] bg-[#2d4a52] rounded-full mix-blend-screen filter blur-[90px] opacity-[0.1]"></div>
+</div>
+<div class="relative z-10 flex flex-col flex-1 px-6 pt-8 pb-10 max-w-md mx-auto w-full gap-6">
+<div class="flex items-center justify-between pb-2">
+<div class="flex flex-col gap-0.5">
+<h1 class="text-2xl font-bold tracking-tight text-white/95">Your Insights</h1>
+<p class="text-sm font-medium text-white/50">October 2023</p>
+</div>
+<button class="relative group p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white/70" style="font-size: 24px;">calendar_month</span>
+</button>
+</div>
+<div class="glass-panel rounded-2xl p-5 flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-semibold text-white/90">Monthly Mood Heatmap</h2>
+<div class="flex items-center gap-2 px-2 py-1 rounded-lg bg-white/5 border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-medium text-primary">Avg 7.8</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="grid grid-cols-7 text-center mb-1">
+<span class="text-[10px] font-semibold text-white/30 uppercase">Mon</span>
+<span class="text-[10px] font-semibold text-white/30 uppercase">Tue</span>
+<span class="text-[10px] font-semibold text-white/30 uppercase">Wed</span>
+<span class="text-[10px] font-semibold text-white/30 uppercase">Thu</span>
+<span class="text-[10px] font-semibold text-white/30 uppercase">Fri</span>
+<span class="text-[10px] font-semibold text-white/30 uppercase">Sat</span>
+<span class="text-[10px] font-semibold text-white/30 uppercase">Sun</span>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<div class="aspect-square"></div>
+<div class="aspect-square"></div>
+<div class="aspect-square rounded-lg bg-primary/20 flex items-center justify-center text-[10px] text-white/40">1</div>
+<div class="aspect-square rounded-lg bg-primary/40 flex items-center justify-center text-[10px] text-white/60">2</div>
+<div class="aspect-square rounded-lg bg-primary/80 flex items-center justify-center text-[10px] text-background-dark font-bold shadow-[0_0_8px_rgba(19,218,236,0.3)]">3</div>
+<div class="aspect-square rounded-lg bg-primary/60 flex items-center justify-center text-[10px] text-white/80">4</div>
+<div class="aspect-square rounded-lg bg-primary/20 flex items-center justify-center text-[10px] text-white/40">5</div>
+<div class="aspect-square rounded-lg bg-primary/10 flex items-center justify-center text-[10px] text-white/30">6</div>
+<div class="aspect-square rounded-lg bg-primary/90 flex items-center justify-center text-[10px] text-background-dark font-bold shadow-[0_0_10px_rgba(19,218,236,0.4)]">7</div>
+<div class="aspect-square rounded-lg bg-primary flex items-center justify-center text-[10px] text-background-dark font-bold shadow-[0_0_12px_rgba(19,218,236,0.5)]">8</div>
+<div class="aspect-square rounded-lg bg-primary/40 flex items-center justify-center text-[10px] text-white/60">9</div>
+<div class="aspect-square rounded-lg bg-primary/30 flex items-center justify-center text-[10px] text-white/50">10</div>
+<div class="aspect-square rounded-lg bg-primary/20 flex items-center justify-center text-[10px] text-white/40">11</div>
+<div class="aspect-square rounded-lg bg-primary/60 flex items-center justify-center text-[10px] text-white/80">12</div>
+<div class="aspect-square rounded-lg bg-primary/80 flex items-center justify-center text-[10px] text-background-dark font-bold">13</div>
+<div class="aspect-square rounded-lg bg-primary/50 flex items-center justify-center text-[10px] text-white/70">14</div>
+<div class="aspect-square rounded-lg bg-primary/20 flex items-center justify-center text-[10px] text-white/40">15</div>
+<div class="aspect-square rounded-lg bg-primary/10 flex items-center justify-center text-[10px] text-white/30">16</div>
+<div class="aspect-square rounded-lg bg-primary/90 flex items-center justify-center text-[10px] text-background-dark font-bold">17</div>
+<div class="aspect-square rounded-lg bg-primary/40 flex items-center justify-center text-[10px] text-white/60">18</div>
+<div class="aspect-square rounded-lg bg-primary/30 flex items-center justify-center text-[10px] text-white/50">19</div>
+<div class="aspect-square rounded-lg bg-primary/60 flex items-center justify-center text-[10px] text-white/80">20</div>
+<div class="aspect-square rounded-lg bg-primary/80 flex items-center justify-center text-[10px] text-background-dark font-bold">21</div>
+<div class="aspect-square rounded-lg bg-primary/10 flex items-center justify-center text-[10px] text-white/30">22</div>
+<div class="aspect-square rounded-lg bg-primary/20 flex items-center justify-center text-[10px] text-white/40">23</div>
+<div class="aspect-square rounded-lg bg-primary/50 flex items-center justify-center text-[10px] text-white/70">24</div>
+<div class="aspect-square rounded-lg bg-primary/70 flex items-center justify-center text-[10px] text-background-dark font-bold">25</div>
+<div class="aspect-square rounded-lg bg-primary/30 flex items-center justify-center text-[10px] text-white/50">26</div>
+<div class="aspect-square rounded-lg bg-primary/40 flex items-center justify-center text-[10px] text-white/60">27</div>
+<div class="aspect-square rounded-lg bg-primary/60 flex items-center justify-center text-[10px] text-white/80">28</div>
+<div class="aspect-square rounded-lg bg-primary/90 flex items-center justify-center text-[10px] text-background-dark font-bold">29</div>
+<div class="aspect-square rounded-lg bg-primary/20 flex items-center justify-center text-[10px] text-white/40">30</div>
+<div class="aspect-square rounded-lg bg-white/5 flex items-center justify-center text-[10px] text-white/20">31</div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-2xl p-6 flex flex-col gap-6 relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<div>
+<h2 class="text-base font-semibold text-white/90">Mood &amp; Movement</h2>
+<p class="text-xs text-white/40 mt-1 font-medium">Correlation Analysis</p>
+</div>
+<div class="flex flex-col gap-2 items-end">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_6px_rgba(19,218,236,0.6)]"></span>
+<span class="text-[10px] font-medium text-white/60">Mood Score</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-sm bg-white/20 border border-white/10"></span>
+<span class="text-[10px] font-medium text-white/60">Exercise (min)</span>
+</div>
+</div>
+</div>
+<div class="relative h-48 w-full mt-2 select-none">
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+</div>
+<div class="absolute inset-0 flex items-end justify-between px-2 pt-4 pb-0 z-0">
+<div class="w-[8%] h-[30%] bg-white/10 rounded-t-sm hover:bg-white/20 transition-all"></div>
+<div class="w-[8%] h-[45%] bg-white/10 rounded-t-sm hover:bg-white/20 transition-all"></div>
+<div class="w-[8%] h-[20%] bg-white/10 rounded-t-sm hover:bg-white/20 transition-all"></div>
+<div class="w-[8%] h-[75%] bg-white/20 rounded-t-sm border-t border-white/10 hover:bg-white/30 transition-all shadow-[0_0_10px_rgba(255,255,255,0.05)]"></div>
+<div class="w-[8%] h-[50%] bg-white/10 rounded-t-sm hover:bg-white/20 transition-all"></div>
+<div class="w-[8%] h-[85%] bg-white/20 rounded-t-sm border-t border-white/10 hover:bg-white/30 transition-all shadow-[0_0_10px_rgba(255,255,255,0.05)]"></div>
+<div class="w-[8%] h-[40%] bg-white/10 rounded-t-sm hover:bg-white/20 transition-all"></div>
+</div>
+<svg class="absolute inset-0 w-full h-full overflow-visible z-10" preserveAspectRatio="none" viewBox="0 0 100 50">
+<defs>
+<linearGradient id="gradientLine" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#13daec" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#13daec" stop-opacity="0"></stop>
+</linearGradient>
+<filter height="140%" id="glow" width="140%" x="-20%" y="-20%">
+<feGaussianBlur result="blur" stdDeviation="2"></feGaussianBlur>
+<feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+</filter>
+</defs>
+<path d="M4,40 C15,35 20,38 30,25 C40,15 50,10 60,18 C70,25 80,8 90,12 C96,15 96,15 96,15 V50 H4 Z" fill="url(#gradientLine)" opacity="0.2"></path>
+<path d="M4,40 C15,35 20,38 30,25 C40,15 50,10 60,18 C70,25 80,8 90,12" fill="none" filter="url(#glow)" stroke="#13daec" stroke-linecap="round" stroke-width="1.5"></path>
+<circle cx="30" cy="25" fill="#102022" r="2" stroke="#13daec" stroke-width="1.5"></circle>
+<circle cx="60" cy="18" fill="#102022" r="2" stroke="#13daec" stroke-width="1.5"></circle>
+<circle cx="80" cy="8" fill="#102022" r="2" stroke="#13daec" stroke-width="1.5"></circle>
+</svg>
+</div>
+<div class="flex justify-between px-1 -mt-2">
+<span class="text-[10px] text-white/30 font-medium">Mon</span>
+<span class="text-[10px] text-white/30 font-medium">Tue</span>
+<span class="text-[10px] text-white/30 font-medium">Wed</span>
+<span class="text-[10px] text-white/30 font-medium">Thu</span>
+<span class="text-[10px] text-white/30 font-medium">Fri</span>
+<span class="text-[10px] text-white/30 font-medium">Sat</span>
+<span class="text-[10px] text-white/30 font-medium">Sun</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-5 bg-gradient-to-br from-primary/10 to-transparent border-primary/20 flex gap-4 items-start shadow-[0_4px_20px_rgba(19,218,236,0.05)] hover:bg-primary/5 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0 text-primary group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined" style="font-size: 20px;">lightbulb</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center gap-2">
+<h3 class="text-xs font-bold text-primary uppercase tracking-wider">Key Insight</h3>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</div>
+<p class="text-sm text-white/80 leading-relaxed font-light">
+                        Data shows your mood improves by <span class="font-bold text-white">15%</span> on days with <span class="font-bold text-white">30+ mins</span> of exercise.
+                    </p>
+</div>
+</div>
+<div class="h-6"></div> 
+</div>
+</div>
+
+</body></html>

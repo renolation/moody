@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Features - Wellness Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8CB8B5", // Muted Sage/Teal
+                        "primary-glow": "#A4C7C5",
+                        "secondary": "#5C8984", 
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#121817", // Deep Green-Black
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'breathe': 'breathe 5s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        breathe: {
+                            '0%, 100%': { transform: 'scale(0.95)', opacity: '0.4' },
+                            '50%': { transform: 'scale(1.15)', opacity: '0.7' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }.bar {
+            width: 3px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 99px;
+            animation: sound 0ms -800ms linear infinite alternate;
+        }
+        @keyframes sound {
+            0% { height: 3px; opacity: 0.35; }
+            100% { height: 16px; opacity: 0.95; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white font-display antialiased selection:bg-primary selection:text-background-dark">
+<div class="relative min-h-screen w-full overflow-x-hidden flex flex-col">
+<div class="fixed inset-0 z-0 pointer-events-none">
+<div class="absolute top-[-10%] right-[-15%] w-[450px] h-[450px] bg-[#4A9D9C] rounded-full mix-blend-screen filter blur-[130px] opacity-[0.2]"></div>
+<div class="absolute bottom-[5%] left-[-10%] w-[350px] h-[350px] bg-[#5C8984] rounded-full mix-blend-screen filter blur-[100px] opacity-[0.15]"></div>
+</div>
+<div class="relative z-10 flex flex-col flex-1 px-6 pt-10 pb-10 max-w-md mx-auto w-full gap-8">
+<div class="flex items-center justify-between">
+<h1 class="text-3xl font-semibold tracking-tight text-white/95">Wellness Library</h1>
+<button class="w-10 h-10 rounded-full glass-btn flex items-center justify-center hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white/80" style="font-size: 22px;">search</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-4 h-[320px]">
+<div class="glass-panel col-span-1 row-span-2 rounded-3xl relative overflow-hidden group cursor-pointer">
+<div class="absolute inset-0 flex items-center justify-center z-0">
+<div class="w-24 h-24 bg-primary/40 rounded-full filter blur-xl animate-breathe"></div>
+<div class="w-16 h-16 bg-primary/60 rounded-full filter blur-lg animate-breathe" style="animation-delay: 0.5s"></div>
+<div class="absolute w-36 h-36 border border-white/5 rounded-full animate-pulse-slow"></div>
+<div class="absolute w-52 h-52 border border-white/5 rounded-full animate-pulse-slow" style="animation-delay: 1s"></div>
+</div>
+<div class="absolute inset-0 p-5 flex flex-col justify-between z-10">
+<div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10">
+<span class="material-symbols-outlined text-primary-glow">air</span>
+</div>
+<div>
+<h2 class="text-lg font-medium leading-tight mb-1">Breathe<br/>Bubble</h2>
+<p class="text-xs text-white/50">3 min session</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 col-span-1 row-span-2 h-full">
+<div class="glass-panel flex-1 rounded-3xl p-5 relative overflow-hidden group cursor-pointer hover:bg-white/5 transition-all">
+<div class="flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary-glow text-[26px]">scrollable_header</span>
+</div>
+<div>
+<h3 class="text-sm font-medium text-white/90">Daily Quotes<br/>Gallery</h3>
+</div>
+</div>
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-white/5 rounded-full blur-xl"></div>
+</div>
+<div class="glass-panel flex-1 rounded-3xl p-5 relative overflow-hidden group cursor-pointer hover:bg-white/5 transition-all">
+<div class="flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary-glow text-[24px]">edit</span>
+</div>
+<div>
+<h3 class="text-sm font-medium text-white/90">Gratitude<br/>Journal</h3>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 w-16 h-16 bg-white/5 rounded-full blur-xl"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-5 pt-2">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-medium text-white/90">Sleep Sounds &amp; Ambience</h2>
+</div>
+<div class="flex flex-col gap-3">
+<div class="glass-panel p-3 pr-5 rounded-2xl flex items-center gap-4 group cursor-pointer border-primary/30">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary-glow shadow-[0_0_15px_rgba(140,184,181,0.15)]">
+<span class="material-symbols-outlined fill-1" style="font-size: 24px;">pause</span>
+</div>
+<div class="flex-1">
+<h3 class="text-base font-medium text-white">Heavy Rain (NCS)</h3>
+<p class="text-xs text-primary-glow mt-0.5">Playing Now</p>
+</div>
+<div class="flex items-center gap-[3px] h-4">
+<div class="bar bg-primary" style="animation-duration: 474ms;"></div>
+<div class="bar bg-primary" style="animation-duration: 433ms;"></div>
+<div class="bar bg-primary" style="animation-duration: 407ms;"></div>
+<div class="bar bg-primary" style="animation-duration: 458ms;"></div>
+<div class="bar bg-primary" style="animation-duration: 400ms;"></div>
+</div>
+</div>
+<div class="glass-panel p-3 pr-5 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-white/5 transition-colors">
+<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white/70 group-hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined ml-0.5" style="font-size: 24px;">play_arrow</span>
+</div>
+<div class="flex-1">
+<h3 class="text-base font-medium text-white/90">Forest Winds</h3>
+<p class="text-xs text-white/40 mt-0.5">20 min • Nature</p>
+</div>
+<div class="flex items-center gap-[3px] h-4 opacity-30">
+<div class="w-[3px] h-2 bg-white rounded-full"></div>
+<div class="w-[3px] h-3 bg-white rounded-full"></div>
+<div class="w-[3px] h-2 bg-white rounded-full"></div>
+<div class="w-[3px] h-4 bg-white rounded-full"></div>
+<div class="w-[3px] h-2 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="glass-panel p-3 pr-5 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-white/5 transition-colors">
+<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white/70 group-hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined ml-0.5" style="font-size: 24px;">play_arrow</span>
+</div>
+<div class="flex-1">
+<h3 class="text-base font-medium text-white/90">Midnight Cafe</h3>
+<p class="text-xs text-white/40 mt-0.5">45 min • Ambience</p>
+</div>
+<div class="flex items-center gap-[3px] h-4 opacity-30">
+<div class="w-[3px] h-3 bg-white rounded-full"></div>
+<div class="w-[3px] h-2 bg-white rounded-full"></div>
+<div class="w-[3px] h-4 bg-white rounded-full"></div>
+<div class="w-[3px] h-2 bg-white rounded-full"></div>
+<div class="w-[3px] h-3 bg-white rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-0 w-full h-24 bg-gradient-to-t from-background-dark to-transparent pointer-events-none"></div>
+</div>
+
+</body></html>
