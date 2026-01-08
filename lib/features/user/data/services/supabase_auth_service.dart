@@ -2,7 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase show User;
 
 import '../../domain/entities/user.dart';
-import 'auth_exception.dart';
+import 'auth_exception.dart' show AppAuthException;
 import 'auth_service.dart';
 
 /// Supabase implementation of [AuthService].
@@ -56,15 +56,15 @@ class SupabaseAuthService implements AuthService {
       );
 
       if (response.user == null) {
-        throw AuthException('Sign in failed', 'invalid_credentials');
+        throw AppAuthException('Sign in failed', 'invalid_credentials');
       }
 
       return _mapToUser(response.user!);
     } on AuthApiException catch (e) {
-      throw AuthException(e.message, e.code);
+      throw AppAuthException(e.message, e.code);
     } catch (e) {
-      if (e is AuthException) rethrow;
-      throw AuthException(e.toString());
+      if (e is AppAuthException) rethrow;
+      throw AppAuthException(e.toString());
     }
   }
 
@@ -78,15 +78,15 @@ class SupabaseAuthService implements AuthService {
       );
 
       if (response.user == null) {
-        throw AuthException('Sign up failed');
+        throw AppAuthException('Sign up failed');
       }
 
       return _mapToUser(response.user!);
     } on AuthApiException catch (e) {
-      throw AuthException(e.message, e.code);
+      throw AppAuthException(e.message, e.code);
     } catch (e) {
-      if (e is AuthException) rethrow;
-      throw AuthException(e.toString());
+      if (e is AppAuthException) rethrow;
+      throw AppAuthException(e.toString());
     }
   }
 
@@ -95,10 +95,10 @@ class SupabaseAuthService implements AuthService {
     try {
       await _client.auth.signOut();
     } on AuthApiException catch (e) {
-      throw AuthException(e.message, e.code);
+      throw AppAuthException(e.message, e.code);
     } catch (e) {
-      if (e is AuthException) rethrow;
-      throw AuthException(e.toString());
+      if (e is AppAuthException) rethrow;
+      throw AppAuthException(e.toString());
     }
   }
 
@@ -107,10 +107,10 @@ class SupabaseAuthService implements AuthService {
     try {
       await _client.auth.resetPasswordForEmail(email);
     } on AuthApiException catch (e) {
-      throw AuthException(e.message, e.code);
+      throw AppAuthException(e.message, e.code);
     } catch (e) {
-      if (e is AuthException) rethrow;
-      throw AuthException(e.toString());
+      if (e is AppAuthException) rethrow;
+      throw AppAuthException(e.toString());
     }
   }
 }

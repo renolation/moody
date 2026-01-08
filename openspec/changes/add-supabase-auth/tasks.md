@@ -2,17 +2,17 @@
 
 ## Phase 1: Auth Service Layer
 
-- [ ] **1.1** Create `AuthException` class
+- [x] **1.1** Create `AuthException` class
   - File: `features/user/data/services/auth_exception.dart`
   - Include error code and friendly message mapping
   - Verify: Class compiles
 
-- [ ] **1.2** Create `AuthService` abstract interface
+- [x] **1.2** Create `AuthService` abstract interface
   - File: `features/user/data/services/auth_service.dart`
   - Methods: authStateChanges, currentUser, signInWithEmail, signUpWithEmail, signOut, resetPassword
   - Verify: Interface compiles
 
-- [ ] **1.3** Create `SupabaseAuthService` implementation
+- [x] **1.3** Create `SupabaseAuthService` implementation
   - File: `features/user/data/services/supabase_auth_service.dart`
   - Map Supabase User to app User entity
   - Handle auth errors appropriately
@@ -20,47 +20,47 @@
 
 ## Phase 2: Provider Updates
 
-- [ ] **2.1** Create `authServiceProvider`
+- [x] **2.1** Create `authServiceProvider`
   - File: `features/user/presentation/providers/auth_provider.dart`
   - Provide singleton SupabaseAuthService
   - Verify: Provider generates correctly
 
-- [ ] **2.2** Update `currentUserProvider` to use auth stream
+- [x] **2.2** Update `currentUserProvider` to use auth stream
   - File: `features/user/presentation/providers/user_provider.dart`
   - Change from Future to Stream-based
   - Add signIn, signUp, signOut, resetPassword methods
   - Remove SharedPreferences dependency
   - Verify: Provider generates correctly
 
-- [ ] **2.3** Run `dart run build_runner build`
+- [x] **2.3** Run `dart run build_runner build`
   - Generate updated providers
   - Verify: No build errors
 
 ## Phase 3: UI Updates
 
-- [ ] **3.1** Update auth screen for sign in
+- [x] **3.1** Update auth screen for sign in
   - Call `currentUserProvider.signIn()` instead of mock
   - Show loading state during auth
   - Display user-friendly error messages
   - Verify: Sign in works
 
-- [ ] **3.2** Update auth screen for sign up
+- [x] **3.2** Update auth screen for sign up
   - Call `currentUserProvider.signUp()` with name
   - Verify: Sign up works
 
-- [ ] **3.3** Add password reset flow
+- [x] **3.3** Add password reset flow
   - Show dialog to enter email
   - Call `currentUserProvider.resetPassword()`
   - Show success message
   - Verify: Reset email sends
 
-- [ ] **3.4** Update settings screen logout
+- [x] **3.4** Update settings screen logout
   - Call `currentUserProvider.signOut()` instead of mock
   - Verify: Logout works
 
 ## Phase 4: Validation
 
-- [ ] **4.1** Run `flutter analyze`
+- [x] **4.1** Run `flutter analyze`
   - Fix any warnings or errors
   - Verify: No issues found
 

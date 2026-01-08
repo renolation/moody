@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/services/backend_service_provider.dart';
 import '../../data/datasources/user_remote_data_source.dart';
 import '../../data/repositories/user_repository_impl.dart';
-import '../../data/services/auth_exception.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/user_repository.dart';
 import 'auth_provider.dart';
@@ -59,11 +58,12 @@ class CurrentUser extends _$CurrentUser {
 
   /// Sign up with email, password, and name.
   ///
-  /// Throws [AuthException] on failure.
+  /// Throws [AppAuthException] on failure.
   Future<void> signUp(String email, String password, String name) async {
     final authService = ref.read(authServiceProvider);
     await authService.signUpWithEmail(email, password, name);
     // State automatically updates via stream
+    // User record created automatically by database trigger
   }
 
   /// Sign out the current user.

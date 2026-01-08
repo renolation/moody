@@ -569,7 +569,7 @@ class SettingsScreen extends ConsumerWidget {
 
     if (confirmed == true && context.mounted) {
       HapticFeedback.mediumImpact();
-      await ref.read(currentUserProvider.notifier).logout();
+      await ref.read(currentUserProvider.notifier).signOut();
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

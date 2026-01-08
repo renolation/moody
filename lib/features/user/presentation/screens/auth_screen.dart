@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/glass_panel.dart';
-import '../../domain/entities/user.dart';
+import '../../data/services/auth_exception.dart' show AppAuthException;
 import '../providers/user_provider.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -33,13 +33,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _handleAuth() async {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final name = _nameController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
       _showError('Please fill in all fields');
       return;
     }
 
-    if (_isSignUp && _nameController.text.isEmpty) {
+    if (_isSignUp && name.isEmpty) {
       _showError('Please enter your name');
+      return;
+    }
+
+    if (password.length < 6) {
+      _showError('Password must be at least 6 characters');
       return;
     }
 
@@ -47,22 +56,125 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     HapticFeedback.mediumImpact();
 
     try {
-      // Create a user (in a real app, this would call an auth service)
-      final user = User(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        email: _emailController.text.trim(),
-        name: _isSignUp ? _nameController.text.trim() : _emailController.text.split('@').first,
-        createdAt: DateTime.now(),
-      );
-
-      // Login the user
-      await ref.read(currentUserProvider.notifier).login(user);
+      if (_isSignUp) {
+        await ref.read(currentUserProvider.notifier).signUp(email, password, name);
+      } else {
+        await ref.read(currentUserProvider.notifier).signIn(email, password);
+      }
 
       if (mounted) {
+        // Invalidate to force refresh on settings screen
+        ref.invalidate(currentUserProvider);
         context.pop();
       }
     } catch (e) {
-      _showError('Authentication failed: $e');
+      _showError(AppAuthException.friendlyMessage(e));
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleForgotPassword() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showResetPasswordDialog();
+      return;
+    }
+
+    await _sendPasswordReset(email);
+  }
+
+  Future<void> _showResetPasswordDialog() async {
+    final resetEmailController = TextEditingController();
+
+    final email = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.darkBgSecondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Reset Password',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Enter your email address and we\'ll send you a link to reset your password.',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: resetEmailController,
+              keyboardType: TextInputType.emailAddress,
+              style: const TextStyle(color: AppColors.textPrimary),
+              decoration: InputDecoration(
+                hintText: 'Email address',
+                hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.5)),
+                filled: true,
+                fillColor: Colors.black.withValues(alpha: 0.2),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.glassBorder),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.glassBorder),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppColors.primary),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, resetEmailController.text.trim()),
+            child: const Text(
+              'Send',
+              style: TextStyle(color: AppColors.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (email != null && email.isNotEmpty) {
+      await _sendPasswordReset(email);
+    }
+  }
+
+  Future<void> _sendPasswordReset(String email) async {
+    setState(() => _isLoading = true);
+
+    try {
+      await ref.read(currentUserProvider.notifier).resetPassword(email);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Password reset email sent! Check your inbox.'),
+            backgroundColor: AppColors.sage600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      _showError(AppAuthException.friendlyMessage(e));
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -75,6 +187,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       SnackBar(
         content: Text(message),
         backgroundColor: AppColors.error,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }
@@ -242,9 +358,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: GestureDetector(
-                              onTap: () {
-                                // TODO: Implement forgot password
-                              },
+                              onTap: _isLoading ? null : _handleForgotPassword,
                               child: Text(
                                 'Forgot Password?',
                                 style: TextStyle(

@@ -1,16 +1,16 @@
 /// Exception thrown when an authentication operation fails.
-class AuthException implements Exception {
+class AppAuthException implements Exception {
   final String message;
   final String? code;
 
-  AuthException(this.message, [this.code]);
+  AppAuthException(this.message, [this.code]);
 
   @override
-  String toString() => 'AuthException: $message';
+  String toString() => 'AppAuthException: $message';
 
   /// Map error codes to user-friendly messages.
   static String friendlyMessage(dynamic error) {
-    if (error is AuthException) {
+    if (error is AppAuthException) {
       return _mapCodeToMessage(error.code, error.message);
     }
 
