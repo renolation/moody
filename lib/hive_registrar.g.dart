@@ -6,6 +6,7 @@ import 'package:hive_ce/hive.dart';
 import 'package:moody/features/home/data/models/activity_entry_model.dart';
 import 'package:moody/features/home/data/models/mood_entry_model.dart';
 import 'package:moody/features/settings/data/models/user_settings_model.dart';
+import 'package:moody/features/user/data/models/user_model.dart';
 import 'package:moody/features/wellness/data/models/gratitude_entry_model.dart';
 import 'package:moody/features/wellness/data/models/quote_model.dart';
 import 'package:moody/features/wellness/data/models/sound_model.dart';
@@ -17,6 +18,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(MoodEntryModelAdapter());
     registerAdapter(QuoteModelAdapter());
     registerAdapter(SoundModelAdapter());
+    registerAdapter(UserModelAdapter());
     registerAdapter(UserSettingsModelAdapter());
   }
 }
@@ -28,6 +30,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(MoodEntryModelAdapter());
     registerAdapter(QuoteModelAdapter());
     registerAdapter(SoundModelAdapter());
+    registerAdapter(UserModelAdapter());
     registerAdapter(UserSettingsModelAdapter());
   }
 }

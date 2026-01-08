@@ -1,3 +1,4 @@
+import '../services/hive_backend_service.dart';
 import '../../features/home/data/datasources/mood_remote_data_source.dart';
 import '../../features/home/data/datasources/activity_remote_data_source.dart';
 import '../../features/home/data/models/mood_entry_model.dart';
@@ -467,12 +468,15 @@ class MockDataInitializer {
 
 /// Call this after Hive boxes are opened
 Future<void> initializeMockData() async {
-  final moodDataSource = MoodRemoteDataSourceImpl();
-  final activityDataSource = ActivityRemoteDataSourceImpl();
-  final quoteDataSource = QuoteRemoteDataSourceImpl();
-  final soundDataSource = SoundRemoteDataSourceImpl();
-  final gratitudeDataSource = GratitudeRemoteDataSourceImpl();
-  final settingsDataSource = SettingsRemoteDataSourceImpl();
+  // Use HiveBackendService for mock data initialization (local storage)
+  final hiveBackend = HiveBackendService();
+
+  final moodDataSource = MoodRemoteDataSourceImpl(hiveBackend);
+  final activityDataSource = ActivityRemoteDataSourceImpl(hiveBackend);
+  final quoteDataSource = QuoteRemoteDataSourceImpl(hiveBackend);
+  final soundDataSource = SoundRemoteDataSourceImpl(hiveBackend);
+  final gratitudeDataSource = GratitudeRemoteDataSourceImpl(hiveBackend);
+  final settingsDataSource = SettingsRemoteDataSourceImpl(hiveBackend);
 
   final initializer = MockDataInitializer(
     moodDataSource: moodDataSource,

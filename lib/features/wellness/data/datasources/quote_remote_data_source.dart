@@ -1,9 +1,7 @@
-import 'package:hive_ce/hive.dart';
-
+import '../../../../core/services/backend_service.dart';
 import '../models/quote_model.dart';
 
-/// Remote data source using Hive as API simulator
-/// TODO: Replace Hive implementation with real API calls when backend is ready
+/// Remote data source for quotes using BackendService abstraction.
 abstract class QuoteRemoteDataSource {
   Future<List<QuoteModel>> getQuotes();
   Future<QuoteModel> getQuoteOfTheDay();
@@ -12,20 +10,23 @@ abstract class QuoteRemoteDataSource {
 }
 
 class QuoteRemoteDataSourceImpl implements QuoteRemoteDataSource {
-  static const String boxName = 'quotes';
+  static const String tableName = 'quotes';
 
-  Box<QuoteModel> get _box => Hive.box<QuoteModel>(boxName);
+  final BackendService _backend;
+
+  QuoteRemoteDataSourceImpl(this._backend);
 
   @override
   Future<List<QuoteModel>> getQuotes() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    return _box.values.toList();
+    final data = await _backend.getAll(tableName);
+    return data.map((json) => QuoteModel.fromJson(json)).toList();
   }
 
   @override
   Future<QuoteModel> getQuoteOfTheDay() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    final quotes = _box.values.toList();
+    final data = await _backend.getAll(tableName);
+    final quotes = data.map((json) => QuoteModel.fromJson(json)).toList();
+
     if (quotes.isEmpty) {
       return QuoteModel(
         id: 0,
@@ -33,6 +34,7 @@ class QuoteRemoteDataSourceImpl implements QuoteRemoteDataSource {
         author: 'Unknown',
       );
     }
+
     // Use day of year as index for consistent daily quote
     final dayOfYear =
         DateTime.now().difference(DateTime(DateTime.now().year)).inDays;
@@ -41,19 +43,19 @@ class QuoteRemoteDataSourceImpl implements QuoteRemoteDataSource {
 
   @override
   Future<void> toggleFavorite(int id) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    final quote = _box.get(id);
-    if (quote != null) {
-      final updated = quote.copyWith(isFavorite: !quote.isFavorite);
-      await _box.put(id, updated);
+    final existing = await _backend.getById(tableName, id);
+    if (existing != null) {
+      final isFavorite = existing['is_favorite'] as bool? ?? false;
+      await _backend.update(tableName, id, {'is_favorite': !isFavorite});
     }
   }
 
   @override
   Future<void> initializeQuotes(List<QuoteModel> quotes) async {
-    if (_box.isEmpty) {
+    final existing = await _backend.getAll(tableName);
+    if (existing.isEmpty) {
       for (final quote in quotes) {
-        await _box.put(quote.id, quote);
+        await _backend.insert(tableName, quote.toJson());
       }
     }
   }

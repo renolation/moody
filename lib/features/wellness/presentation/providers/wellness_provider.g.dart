@@ -7,7 +7,7 @@ part of 'wellness_provider.dart';
 // **************************************************************************
 
 String _$quoteRemoteDataSourceHash() =>
-    r'abc7a7562f9d6d099b1a5d95116812eaf2ddbba4';
+    r'059166684ba3767ea5175eaf78db624e39a3e0d1';
 
 /// See also [quoteRemoteDataSource].
 @ProviderFor(quoteRemoteDataSource)
@@ -27,7 +27,7 @@ final quoteRemoteDataSourceProvider =
 typedef QuoteRemoteDataSourceRef =
     AutoDisposeProviderRef<QuoteRemoteDataSource>;
 String _$gratitudeRemoteDataSourceHash() =>
-    r'6295e968431570d29c2e370798edb1ae4026bba1';
+    r'22373cba60132c9b26f4821d20d01257496d5efa';
 
 /// See also [gratitudeRemoteDataSource].
 @ProviderFor(gratitudeRemoteDataSource)
@@ -47,7 +47,7 @@ final gratitudeRemoteDataSourceProvider =
 typedef GratitudeRemoteDataSourceRef =
     AutoDisposeProviderRef<GratitudeRemoteDataSource>;
 String _$soundRemoteDataSourceHash() =>
-    r'8a0f7b569830d3cb45fd72a872557fa630de03c0';
+    r'754899468df27bc11af4101679d197fc711bb22a';
 
 /// See also [soundRemoteDataSource].
 @ProviderFor(soundRemoteDataSource)

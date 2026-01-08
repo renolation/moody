@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/services/backend_service_provider.dart';
 import '../../domain/entities/user_settings.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../data/datasources/settings_remote_data_source.dart';
@@ -11,7 +12,8 @@ part 'settings_provider.g.dart';
 // Data Sources
 @riverpod
 SettingsRemoteDataSource settingsRemoteDataSource(Ref ref) {
-  return SettingsRemoteDataSourceImpl();
+  final backend = ref.watch(backendServiceProvider);
+  return SettingsRemoteDataSourceImpl(backend);
 }
 
 // Repositories

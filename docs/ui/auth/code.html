@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mood Holder - Login</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13daec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#102022",
+                        "glass-surface": "rgba(255, 255, 255, 0.05)",
+                        "glass-border": "rgba(255, 255, 255, 0.1)",
+                        "sage": "#84a98c",
+                        "soft-blue": "#8ecae6"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom styles for smoother gradients that might be complex for utility classes */
+        .ambient-gradient-bg {
+            background-color: #102022;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(185, 86%, 50%, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(145, 20%, 60%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(200, 60%, 70%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(185, 86%, 50%, 0.05) 0px, transparent 50%);
+        }
+        
+        .glass-panel {
+            background: rgba(16, 32, 34, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display antialiased text-white selection:bg-primary selection:text-[#111718]">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden ambient-gradient-bg px-4 py-8">
+<!-- Background decorative elements for depth -->
+<div class="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-primary/10 blur-[100px] pointer-events-none"></div>
+<div class="absolute bottom-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full bg-sage/10 blur-[100px] pointer-events-none"></div>
+<div class="absolute top-[40%] left-[60%] h-[300px] w-[300px] rounded-full bg-soft-blue/10 blur-[80px] pointer-events-none"></div>
+<!-- Glass Card Container -->
+<div class="glass-panel relative w-full max-w-[400px] rounded-2xl p-6 sm:p-8 animate-fade-in-up">
+<!-- Header Section -->
+<div class="flex flex-col items-center justify-center pb-8 pt-2">
+<div class="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr from-primary/20 to-transparent border border-white/5 mb-4 shadow-lg shadow-primary/5">
+<span class="material-symbols-outlined text-primary text-[32px]">spa</span>
+</div>
+<h1 class="text-white tracking-tight text-[28px] font-bold leading-tight text-center">Mood Holder</h1>
+<p class="text-white/50 text-sm mt-2 font-light">Your daily wellness companion</p>
+</div>
+<!-- Form Section -->
+<form class="flex flex-col gap-5" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<label class="flex flex-col gap-2">
+<p class="text-white/80 text-sm font-medium pl-1">Email Address</p>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-white/40 text-[20px]">mail</span>
+<input class="form-input flex w-full flex-1 resize-none rounded-xl text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-white/10 bg-black/20 focus:border-primary/50 h-12 pl-12 pr-4 text-base font-normal leading-normal transition-all duration-200 ease-in-out placeholder:font-light" placeholder="name@example.com" required="" type="email"/>
+</div>
+</label>
+<!-- Password Field -->
+<label class="flex flex-col gap-2">
+<div class="flex justify-between items-center pl-1">
+<p class="text-white/80 text-sm font-medium">Password</p>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-white/40 text-[20px]">lock</span>
+<input class="form-input flex w-full flex-1 resize-none rounded-xl text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-white/10 bg-black/20 focus:border-primary/50 h-12 pl-12 pr-12 text-base font-normal leading-normal transition-all duration-200 ease-in-out placeholder:font-light" placeholder="Enter your password" required="" type="password"/>
+<button class="absolute right-0 top-0 bottom-0 flex items-center justify-center px-4 text-white/40 hover:text-white transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+</label>
+<!-- Helper Actions -->
+<div class="flex justify-end px-1">
+<a class="text-xs text-primary/90 hover:text-primary transition-colors font-medium" href="#">Forgot Password?</a>
+</div>
+<!-- Main Actions -->
+<div class="flex flex-col gap-3 mt-2">
+<!-- Login Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary hover:bg-[#0bc5d6] active:scale-[0.99] transition-all text-[#102022] text-base font-bold leading-normal tracking-wide shadow-[0_0_20px_rgba(19,218,236,0.15)]">
+<span class="truncate">Log In</span>
+</button>
+<!-- Sign Up Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-transparent border border-white/20 hover:bg-white/5 active:scale-[0.99] transition-all text-white text-base font-semibold leading-normal tracking-wide">
+<span class="truncate">Create Account</span>
+</button>
+</div>
+</form>
+<!-- Footer Text -->
+<div class="mt-8 text-center">
+<p class="text-xs text-white/40">
+                    By logging in, you agree to our 
+                    <a class="text-white/60 underline decoration-white/30 hover:text-white transition-colors" href="#">Terms</a> 
+                    and 
+                    <a class="text-white/60 underline decoration-white/30 hover:text-white transition-colors" href="#">Privacy Policy</a>
+</p>
+</div>
+</div>
+</div>
+</body></html>

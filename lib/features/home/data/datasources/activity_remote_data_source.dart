@@ -1,9 +1,7 @@
-import 'package:hive_ce/hive.dart';
-
+import '../../../../core/services/backend_service.dart';
 import '../models/activity_entry_model.dart';
 
-/// Remote data source using Hive as API simulator
-/// TODO: Replace Hive implementation with real API calls when backend is ready
+/// Remote data source for activity entries using BackendService abstraction.
 abstract class ActivityRemoteDataSource {
   Future<List<ActivityEntryModel>> getActivities();
   Future<List<ActivityEntryModel>> getActivitiesByDate(DateTime date);
@@ -14,53 +12,59 @@ abstract class ActivityRemoteDataSource {
 }
 
 class ActivityRemoteDataSourceImpl implements ActivityRemoteDataSource {
-  static const String boxName = 'activities';
+  static const String tableName = 'activities';
 
-  Box<ActivityEntryModel> get _box => Hive.box<ActivityEntryModel>(boxName);
+  final BackendService _backend;
+
+  ActivityRemoteDataSourceImpl(this._backend);
 
   @override
   Future<List<ActivityEntryModel>> getActivities() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    return _box.values.toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final data = await _backend.getAll(tableName, orderBy: 'timestamp');
+    return data.map((json) => ActivityEntryModel.fromJson(json)).toList();
   }
 
   @override
   Future<List<ActivityEntryModel>> getActivitiesByDate(DateTime date) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    return _box.values.where((a) {
-      return a.timestamp.year == date.year &&
-          a.timestamp.month == date.month &&
-          a.timestamp.day == date.day;
-    }).toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+
+    final data = await _backend.query(
+      tableName,
+      greaterThanOrEqual: {'timestamp': startOfDay.toIso8601String()},
+      lessThan: {'timestamp': endOfDay.toIso8601String()},
+      orderBy: 'timestamp',
+    );
+    return data.map((json) => ActivityEntryModel.fromJson(json)).toList();
   }
 
   @override
   Future<ActivityEntryModel> addActivity(ActivityEntryModel activity) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    await _box.put(activity.id, activity);
-    return activity;
+    final data = await _backend.insert(tableName, activity.toJson());
+    return ActivityEntryModel.fromJson(data);
   }
 
   @override
   Future<void> deleteActivity(int id) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    await _box.delete(id);
+    await _backend.delete(tableName, id);
   }
 
   @override
   Future<int> getNextId() async {
-    if (_box.isEmpty) return 1;
-    final maxId = _box.values.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+    final data = await _backend.getAll(tableName);
+    if (data.isEmpty) return 1;
+    final maxId = data
+        .map((e) => e['id'] as int? ?? 0)
+        .reduce((a, b) => a > b ? a : b);
     return maxId + 1;
   }
 
   @override
   Future<void> initializeActivities(List<ActivityEntryModel> activities) async {
-    if (_box.isEmpty) {
+    final existing = await _backend.getAll(tableName);
+    if (existing.isEmpty) {
       for (final activity in activities) {
-        await _box.put(activity.id, activity);
+        await _backend.insert(tableName, activity.toJson());
       }
     }
   }

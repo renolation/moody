@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
@@ -15,6 +16,7 @@ import 'features/wellness/data/models/quote_model.dart';
 import 'features/wellness/data/models/gratitude_entry_model.dart';
 import 'features/wellness/data/models/sound_model.dart';
 import 'features/settings/data/models/user_settings_model.dart';
+import 'features/user/data/models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,12 @@ void main() async {
   // Register Hive adapters
   Hive.registerAdapters();
 
+  // Initialize Supabase
+  await Supabase.initialize(
+    url: 'https://blhtrhpejkintvxxmfrq.supabase.co',
+    anonKey: 'sb_publishable_04xGwF1Cf4LVISNU55hm9w_NkrE6Do_',
+  );
+
   // Open Hive boxes
   await Future.wait([
     Hive.openBox<MoodEntryModel>('moods'),
@@ -33,6 +41,7 @@ void main() async {
     Hive.openBox<GratitudeEntryModel>('gratitude'),
     Hive.openBox<SoundModel>('sounds'),
     Hive.openBox<UserSettingsModel>('settings'),
+    Hive.openBox<UserModel>('users'),
   ]);
 
   // Set system UI overlay style

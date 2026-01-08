@@ -1,25 +1,24 @@
-import 'package:hive_ce/hive.dart';
-
+import '../../../../core/services/backend_service.dart';
 import '../../../home/data/models/mood_entry_model.dart';
 import '../../../home/data/models/activity_entry_model.dart';
 import '../models/stats_model.dart';
 
-/// Remote data source using Hive as API simulator
-/// TODO: Replace Hive implementation with real API calls when backend is ready
+/// Remote data source for stats using BackendService abstraction.
 abstract class StatsRemoteDataSource {
   Future<MonthlyStatsModel> getMonthlyStats(int year, int month);
   Future<WeeklyCorrelationModel> getWeeklyCorrelation();
 }
 
 class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
-  Box<MoodEntryModel> get _moodBox => Hive.box<MoodEntryModel>('moods');
-  Box<ActivityEntryModel> get _activityBox =>
-      Hive.box<ActivityEntryModel>('activities');
+  static const String moodsTable = 'moods';
+  static const String activitiesTable = 'activities';
+
+  final BackendService _backend;
+
+  StatsRemoteDataSourceImpl(this._backend);
 
   @override
   Future<MonthlyStatsModel> getMonthlyStats(int year, int month) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-
     final daysInMonth = DateTime(year, month + 1, 0).day;
     final dailyStats = <int, DayMoodStatsModel>{};
 
@@ -29,13 +28,23 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
     int daysWithData = 0;
 
     // Get all moods and activities for the month
-    final moods = _moodBox.values.where((m) {
-      return m.timestamp.year == year && m.timestamp.month == month;
-    }).toList();
+    final startOfMonth = DateTime(year, month, 1);
+    final endOfMonth = DateTime(year, month + 1, 1);
 
-    final activities = _activityBox.values.where((a) {
-      return a.timestamp.year == year && a.timestamp.month == month;
-    }).toList();
+    final moodsData = await _backend.query(
+      moodsTable,
+      greaterThanOrEqual: {'timestamp': startOfMonth.toIso8601String()},
+      lessThan: {'timestamp': endOfMonth.toIso8601String()},
+    );
+    final moods = moodsData.map((j) => MoodEntryModel.fromJson(j)).toList();
+
+    final activitiesData = await _backend.query(
+      activitiesTable,
+      greaterThanOrEqual: {'timestamp': startOfMonth.toIso8601String()},
+      lessThan: {'timestamp': endOfMonth.toIso8601String()},
+    );
+    final activities =
+        activitiesData.map((j) => ActivityEntryModel.fromJson(j)).toList();
 
     for (int day = 1; day <= daysInMonth; day++) {
       final dayMoods = moods.where((m) => m.timestamp.day == day).toList();
@@ -81,11 +90,26 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
 
   @override
   Future<WeeklyCorrelationModel> getWeeklyCorrelation() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-
     final now = DateTime.now();
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    final endOfWeek = startOfWeek.add(const Duration(days: 7));
     final dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    // Fetch week's data
+    final moodsData = await _backend.query(
+      moodsTable,
+      greaterThanOrEqual: {'timestamp': startOfWeek.toIso8601String()},
+      lessThan: {'timestamp': endOfWeek.toIso8601String()},
+    );
+    final allMoods = moodsData.map((j) => MoodEntryModel.fromJson(j)).toList();
+
+    final activitiesData = await _backend.query(
+      activitiesTable,
+      greaterThanOrEqual: {'timestamp': startOfWeek.toIso8601String()},
+      lessThan: {'timestamp': endOfWeek.toIso8601String()},
+    );
+    final allActivities =
+        activitiesData.map((j) => ActivityEntryModel.fromJson(j)).toList();
 
     final days = <DayCorrelationModel>[];
     int daysWithMood = 0;
@@ -93,13 +117,13 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
 
     for (int i = 0; i < 7; i++) {
       final date = startOfWeek.add(Duration(days: i));
-      final dayMoods = _moodBox.values.where((m) {
+      final dayMoods = allMoods.where((m) {
         return m.timestamp.year == date.year &&
             m.timestamp.month == date.month &&
             m.timestamp.day == date.day;
       }).toList();
 
-      final dayActivities = _activityBox.values.where((a) {
+      final dayActivities = allActivities.where((a) {
         return a.timestamp.year == date.year &&
             a.timestamp.month == date.month &&
             a.timestamp.day == date.day;

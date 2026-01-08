@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/services/backend_service_provider.dart';
 import '../../domain/entities/mood_stats.dart';
 import '../../domain/repositories/stats_repository.dart';
 import '../../data/datasources/stats_remote_data_source.dart';
@@ -11,7 +12,8 @@ part 'insights_provider.g.dart';
 // Data Sources
 @riverpod
 StatsRemoteDataSource statsRemoteDataSource(Ref ref) {
-  return StatsRemoteDataSourceImpl();
+  final backend = ref.watch(backendServiceProvider);
+  return StatsRemoteDataSourceImpl(backend);
 }
 
 // Repositories

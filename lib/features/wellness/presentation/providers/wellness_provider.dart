@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/services/backend_service_provider.dart';
 import '../../domain/entities/quote.dart';
 import '../../domain/entities/gratitude_entry.dart';
 import '../../domain/entities/sound.dart';
@@ -19,17 +20,20 @@ part 'wellness_provider.g.dart';
 // Data Sources
 @riverpod
 QuoteRemoteDataSource quoteRemoteDataSource(Ref ref) {
-  return QuoteRemoteDataSourceImpl();
+  final backend = ref.watch(backendServiceProvider);
+  return QuoteRemoteDataSourceImpl(backend);
 }
 
 @riverpod
 GratitudeRemoteDataSource gratitudeRemoteDataSource(Ref ref) {
-  return GratitudeRemoteDataSourceImpl();
+  final backend = ref.watch(backendServiceProvider);
+  return GratitudeRemoteDataSourceImpl(backend);
 }
 
 @riverpod
 SoundRemoteDataSource soundRemoteDataSource(Ref ref) {
-  return SoundRemoteDataSourceImpl();
+  final backend = ref.watch(backendServiceProvider);
+  return SoundRemoteDataSourceImpl(backend);
 }
 
 // Repositories

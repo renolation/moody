@@ -7,7 +7,7 @@ part of 'settings_provider.dart';
 // **************************************************************************
 
 String _$settingsRemoteDataSourceHash() =>
-    r'a97f4593a730a52cb57b9c23849f087b82b11adb';
+    r'fda2ec640663f0ae69c646b44b9fa0490127723f';
 
 /// See also [settingsRemoteDataSource].
 @ProviderFor(settingsRemoteDataSource)

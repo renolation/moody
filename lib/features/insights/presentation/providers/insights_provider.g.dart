@@ -7,7 +7,7 @@ part of 'insights_provider.dart';
 // **************************************************************************
 
 String _$statsRemoteDataSourceHash() =>
-    r'8517137a65519765b16b914ee50eac817d9cf8ce';
+    r'6e9ea2f1f55a9f5b157d53ea71035d5153a3d3e3';
 
 /// See also [statsRemoteDataSource].
 @ProviderFor(statsRemoteDataSource)

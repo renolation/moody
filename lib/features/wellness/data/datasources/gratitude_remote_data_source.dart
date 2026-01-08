@@ -1,9 +1,7 @@
-import 'package:hive_ce/hive.dart';
-
+import '../../../../core/services/backend_service.dart';
 import '../models/gratitude_entry_model.dart';
 
-/// Remote data source using Hive as API simulator
-/// TODO: Replace Hive implementation with real API calls when backend is ready
+/// Remote data source for gratitude entries using BackendService abstraction.
 abstract class GratitudeRemoteDataSource {
   Future<List<GratitudeEntryModel>> getEntries();
   Future<GratitudeEntryModel> addEntry(GratitudeEntryModel entry);
@@ -13,41 +11,45 @@ abstract class GratitudeRemoteDataSource {
 }
 
 class GratitudeRemoteDataSourceImpl implements GratitudeRemoteDataSource {
-  static const String boxName = 'gratitude';
+  static const String tableName = 'gratitude';
 
-  Box<GratitudeEntryModel> get _box => Hive.box<GratitudeEntryModel>(boxName);
+  final BackendService _backend;
+
+  GratitudeRemoteDataSourceImpl(this._backend);
 
   @override
   Future<List<GratitudeEntryModel>> getEntries() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    return _box.values.toList()..sort((a, b) => b.date.compareTo(a.date));
+    final data = await _backend.getAll(tableName, orderBy: 'date');
+    return data.map((json) => GratitudeEntryModel.fromJson(json)).toList();
   }
 
   @override
   Future<GratitudeEntryModel> addEntry(GratitudeEntryModel entry) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    await _box.put(entry.id, entry);
-    return entry;
+    final data = await _backend.insert(tableName, entry.toJson());
+    return GratitudeEntryModel.fromJson(data);
   }
 
   @override
   Future<void> deleteEntry(int id) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    await _box.delete(id);
+    await _backend.delete(tableName, id);
   }
 
   @override
   Future<int> getNextId() async {
-    if (_box.isEmpty) return 1;
-    final maxId = _box.values.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+    final data = await _backend.getAll(tableName);
+    if (data.isEmpty) return 1;
+    final maxId = data
+        .map((e) => e['id'] as int? ?? 0)
+        .reduce((a, b) => a > b ? a : b);
     return maxId + 1;
   }
 
   @override
   Future<void> initializeEntries(List<GratitudeEntryModel> entries) async {
-    if (_box.isEmpty) {
+    final existing = await _backend.getAll(tableName);
+    if (existing.isEmpty) {
       for (final entry in entries) {
-        await _box.put(entry.id, entry);
+        await _backend.insert(tableName, entry.toJson());
       }
     }
   }

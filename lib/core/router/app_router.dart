@@ -9,6 +9,7 @@ import '../../features/wellness/presentation/screens/breathe_screen.dart';
 import '../../features/wellness/presentation/screens/quotes_screen.dart';
 import '../../features/wellness/presentation/screens/gratitude_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/user/presentation/screens/auth_screen.dart';
 import 'app_shell.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -77,6 +78,12 @@ final appRouter = GoRouter(
       name: 'gratitude',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const GratitudeScreen(),
+    ),
+    GoRoute(
+      path: '/auth',
+      name: 'auth',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const AuthScreen(),
     ),
   ],
 );

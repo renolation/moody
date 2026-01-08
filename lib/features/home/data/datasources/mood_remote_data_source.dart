@@ -1,9 +1,7 @@
-import 'package:hive_ce/hive.dart';
-
+import '../../../../core/services/backend_service.dart';
 import '../models/mood_entry_model.dart';
 
-/// Remote data source using Hive as API simulator
-/// TODO: Replace Hive implementation with real API calls when backend is ready
+/// Remote data source for mood entries using BackendService abstraction.
 abstract class MoodRemoteDataSource {
   Future<List<MoodEntryModel>> getMoods();
   Future<List<MoodEntryModel>> getMoodsByDate(DateTime date);
@@ -14,54 +12,59 @@ abstract class MoodRemoteDataSource {
 }
 
 class MoodRemoteDataSourceImpl implements MoodRemoteDataSource {
-  static const String boxName = 'moods';
+  static const String tableName = 'moods';
 
-  Box<MoodEntryModel> get _box => Hive.box<MoodEntryModel>(boxName);
+  final BackendService _backend;
+
+  MoodRemoteDataSourceImpl(this._backend);
 
   @override
   Future<List<MoodEntryModel>> getMoods() async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 200));
-    return _box.values.toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final data = await _backend.getAll(tableName, orderBy: 'timestamp');
+    return data.map((json) => MoodEntryModel.fromJson(json)).toList();
   }
 
   @override
   Future<List<MoodEntryModel>> getMoodsByDate(DateTime date) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    return _box.values.where((m) {
-      return m.timestamp.year == date.year &&
-          m.timestamp.month == date.month &&
-          m.timestamp.day == date.day;
-    }).toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+
+    final data = await _backend.query(
+      tableName,
+      greaterThanOrEqual: {'timestamp': startOfDay.toIso8601String()},
+      lessThan: {'timestamp': endOfDay.toIso8601String()},
+      orderBy: 'timestamp',
+    );
+    return data.map((json) => MoodEntryModel.fromJson(json)).toList();
   }
 
   @override
   Future<MoodEntryModel> addMood(MoodEntryModel mood) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    await _box.put(mood.id, mood);
-    return mood;
+    final data = await _backend.insert(tableName, mood.toJson());
+    return MoodEntryModel.fromJson(data);
   }
 
   @override
   Future<void> deleteMood(int id) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    await _box.delete(id);
+    await _backend.delete(tableName, id);
   }
 
   @override
   Future<int> getNextId() async {
-    if (_box.isEmpty) return 1;
-    final maxId = _box.values.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+    final data = await _backend.getAll(tableName);
+    if (data.isEmpty) return 1;
+    final maxId = data
+        .map((e) => e['id'] as int? ?? 0)
+        .reduce((a, b) => a > b ? a : b);
     return maxId + 1;
   }
 
   @override
   Future<void> initializeMoods(List<MoodEntryModel> moods) async {
-    if (_box.isEmpty) {
+    final existing = await _backend.getAll(tableName);
+    if (existing.isEmpty) {
       for (final mood in moods) {
-        await _box.put(mood.id, mood);
+        await _backend.insert(tableName, mood.toJson());
       }
     }
   }

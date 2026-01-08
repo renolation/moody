@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -10,6 +11,7 @@ import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/glass_panel.dart';
 import '../../../../core/data/mock_data_initializer.dart';
+import '../../../user/presentation/providers/user_provider.dart';
 import '../providers/settings_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -18,6 +20,8 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(settingsProvider);
+    final currentUserAsync = ref.watch(currentUserProvider);
+    final currentUser = currentUserAsync.valueOrNull;
 
     return SafeArea(
       child: settingsAsync.when(
@@ -63,72 +67,181 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: AppDimensions.spacingXl),
 
               // Profile Card
-              GlassPanel(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    // Avatar
-                    Container(
-                      width: 64,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.primary,
-                            AppColors.accent,
+              if (currentUser != null)
+                // Logged in - show user info
+                GlassPanel(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      // Avatar
+                      Container(
+                        width: 64,
+                        height: 64,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.primary,
+                              AppColors.accent,
+                            ],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.3),
+                              blurRadius: 15,
+                            ),
                           ],
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.3),
-                            blurRadius: 15,
+                        padding: const EdgeInsets.all(2),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.darkBg,
                           ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(2),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.darkBg,
+                          child: currentUser.avatarUrl != null
+                              ? ClipOval(
+                                  child: Image.network(
+                                    currentUser.avatarUrl!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.person,
+                                  color: AppColors.textSecondary,
+                                  size: 32,
+                                ),
                         ),
-                        child: const Icon(
-                          Icons.person,
-                          color: AppColors.textSecondary,
-                          size: 32,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              currentUser.name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            Text(
+                              currentUser.email,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.textMuted.withValues(alpha: 0.7),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.cloud_done,
+                                  size: 14,
+                                  color: AppColors.primary.withValues(alpha: 0.8),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Syncing to cloud',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.primary.withValues(alpha: 0.8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            settings.userName,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimary,
+                      // Logout button
+                      GestureDetector(
+                        onTap: () => _showLogoutDialog(context, ref),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.error.withValues(alpha: 0.1),
+                          ),
+                          child: const Icon(
+                            Icons.logout,
+                            color: AppColors.error,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                // Not logged in - show sign in prompt
+                GestureDetector(
+                  onTap: () => context.push('/auth'),
+                  child: GlassPanel(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        // Cloud icon
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            border: Border.all(
+                              color: AppColors.primary.withValues(alpha: 0.3),
                             ),
                           ),
-                          Text(
-                            settings.userEmail ?? 'alex.doe@example.com',
+                          child: const Icon(
+                            Icons.cloud_outlined,
+                            color: AppColors.primary,
+                            size: 32,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Sign in to sync',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              Text(
+                                'Backup your data across devices',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.textMuted.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.primary,
+                          ),
+                          child: const Text(
+                            'Sign In',
                             style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.textMuted.withValues(alpha: 0.7),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.darkBg,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const Icon(
-                      Icons.chevron_right,
-                      color: AppColors.textMuted,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
               const SizedBox(height: AppDimensions.spacingXl),
 
               // Integrations Section
@@ -419,6 +532,57 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
       );
+    }
+  }
+
+  Future<void> _showLogoutDialog(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.darkBgSecondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Sign Out?',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: const Text(
+          'Your data will still be stored locally. Sign in again to sync across devices.',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text(
+              'Sign Out',
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      HapticFeedback.mediumImpact();
+      await ref.read(currentUserProvider.notifier).logout();
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Signed out successfully'),
+            backgroundColor: AppColors.sage600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
     }
   }
 }

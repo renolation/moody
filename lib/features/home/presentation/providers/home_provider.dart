@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/enums/mood_score.dart';
 import '../../../../core/enums/activity_type.dart';
+import '../../../../core/services/backend_service_provider.dart';
 import '../../domain/entities/mood_entry.dart';
 import '../../domain/entities/activity_entry.dart';
 import '../../domain/entities/journey_item.dart';
@@ -18,12 +19,14 @@ part 'home_provider.g.dart';
 // Data Sources
 @riverpod
 MoodRemoteDataSource moodRemoteDataSource(Ref ref) {
-  return MoodRemoteDataSourceImpl();
+  final backend = ref.watch(backendServiceProvider);
+  return MoodRemoteDataSourceImpl(backend);
 }
 
 @riverpod
 ActivityRemoteDataSource activityRemoteDataSource(Ref ref) {
-  return ActivityRemoteDataSourceImpl();
+  final backend = ref.watch(backendServiceProvider);
+  return ActivityRemoteDataSourceImpl(backend);
 }
 
 // Repositories

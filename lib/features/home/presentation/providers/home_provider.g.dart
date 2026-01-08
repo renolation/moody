@@ -7,7 +7,7 @@ part of 'home_provider.dart';
 // **************************************************************************
 
 String _$moodRemoteDataSourceHash() =>
-    r'95fd17e644e04afe8ded7d27a4c9a288d4980614';
+    r'0ee73b1c73f42a51c9819c1945dbe5b7e7db8051';
 
 /// See also [moodRemoteDataSource].
 @ProviderFor(moodRemoteDataSource)
@@ -26,7 +26,7 @@ final moodRemoteDataSourceProvider =
 // ignore: unused_element
 typedef MoodRemoteDataSourceRef = AutoDisposeProviderRef<MoodRemoteDataSource>;
 String _$activityRemoteDataSourceHash() =>
-    r'813162dd2b494ccc81642336e778aadaa5885f5f';
+    r'e63e8d8e2c9264b9598372dba585e01aa2ffd78f';
 
 /// See also [activityRemoteDataSource].
 @ProviderFor(activityRemoteDataSource)
