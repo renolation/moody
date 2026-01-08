@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/services/backend_service_provider.dart';
+import '../../../user/presentation/providers/user_provider.dart';
 import '../../domain/entities/mood_stats.dart';
 import '../../domain/repositories/stats_repository.dart';
 import '../../data/datasources/stats_remote_data_source.dart';
@@ -45,15 +46,33 @@ class SelectedMonth extends _$SelectedMonth {
   }
 }
 
-@riverpod
-Future<MonthlyStats> monthlyStats(Ref ref) async {
-  final selectedMonth = ref.watch(selectedMonthProvider);
-  final repository = ref.watch(statsRepositoryProvider);
-  return repository.getMonthlyStats(selectedMonth.year, selectedMonth.month);
+@Riverpod(keepAlive: true)
+class MonthlyStatsNotifier extends _$MonthlyStatsNotifier {
+  @override
+  Future<MonthlyStats> build() async {
+    ref.keepAlive();
+    final selectedMonth = ref.watch(selectedMonthProvider);
+    final repository = ref.watch(statsRepositoryProvider);
+    final user = ref.watch(currentUserProvider).valueOrNull;
+    return repository.getMonthlyStats(selectedMonth.year, selectedMonth.month, userId: user?.id);
+  }
+
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+  }
 }
 
-@riverpod
-Future<WeeklyCorrelation> weeklyCorrelation(Ref ref) async {
-  final repository = ref.watch(statsRepositoryProvider);
-  return repository.getWeeklyCorrelation();
+@Riverpod(keepAlive: true)
+class WeeklyCorrelationNotifier extends _$WeeklyCorrelationNotifier {
+  @override
+  Future<WeeklyCorrelation> build() async {
+    ref.keepAlive();
+    final repository = ref.watch(statsRepositoryProvider);
+    final user = ref.watch(currentUserProvider).valueOrNull;
+    return repository.getWeeklyCorrelation(userId: user?.id);
+  }
+
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+  }
 }

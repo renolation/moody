@@ -152,7 +152,7 @@ final quotesProvider =
     );
 
 typedef _$Quotes = AutoDisposeAsyncNotifier<List<Quote>>;
-String _$gratitudeEntriesHash() => r'13c34b7f3821cda7979a4b17933bf21453d8c9fc';
+String _$gratitudeEntriesHash() => r'aeb80cdc66b2a99b801221bf58651879a847cd5c';
 
 /// See also [GratitudeEntries].
 @ProviderFor(GratitudeEntries)

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/services/backend_service_provider.dart';
+import '../../../user/presentation/providers/user_provider.dart';
 import '../../domain/entities/quote.dart';
 import '../../domain/entities/gratitude_entry.dart';
 import '../../domain/entities/sound.dart';
@@ -79,18 +80,21 @@ class GratitudeEntries extends _$GratitudeEntries {
   @override
   Future<List<GratitudeEntry>> build() async {
     final repository = ref.watch(gratitudeRepositoryProvider);
-    return repository.getEntries();
+    final user = ref.watch(currentUserProvider).valueOrNull;
+    return repository.getEntries(userId: user?.id);
   }
 
   Future<void> addEntry(List<String> items) async {
     final repository = ref.read(gratitudeRepositoryProvider);
-    await repository.addEntry(items);
+    final user = ref.read(currentUserProvider).valueOrNull;
+    await repository.addEntry(items, userId: user?.id);
     ref.invalidateSelf();
   }
 
   Future<GratitudeEntry?> getTodayEntry() async {
     final repository = ref.read(gratitudeRepositoryProvider);
-    return repository.getTodayEntry();
+    final user = ref.read(currentUserProvider).valueOrNull;
+    return repository.getTodayEntry(userId: user?.id);
   }
 }
 

@@ -18,20 +18,50 @@ class ActivityScreen extends ConsumerWidget {
 
     return SafeArea(
       child: statsAsync.when(
-        data: (stats) => SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.screenPaddingH,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: AppDimensions.spacingLg),
-              // Header
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.maybePop(context),
-                    child: Container(
+        data: (stats) => RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: () => ref.read(activityStatsNotifierProvider.notifier).refresh(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.screenPaddingH,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: AppDimensions.spacingLg),
+                // Header
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.maybePop(context),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.glassBackground,
+                          border: Border.all(color: AppColors.glassBorder),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: AppColors.textMuted,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                    const Expanded(
+                      child: Text(
+                        'Activity & Movement',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                    Container(
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
@@ -40,76 +70,51 @@ class ActivityScreen extends ConsumerWidget {
                         border: Border.all(color: AppColors.glassBorder),
                       ),
                       child: const Icon(
-                        Icons.arrow_back_ios_new,
+                        Icons.calendar_month,
                         color: AppColors.textMuted,
-                        size: 18,
+                        size: 20,
                       ),
                     ),
-                  ),
-                  const Expanded(
-                    child: Text(
-                      'Activity & Movement',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.glassBackground,
-                      border: Border.all(color: AppColors.glassBorder),
-                    ),
-                    child: const Icon(
-                      Icons.calendar_month,
-                      color: AppColors.textMuted,
-                      size: 20,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppDimensions.spacingXl),
-
-              // Hero: Activity Progress Ring
-              Center(
-                child: ActivityProgressRing(
-                  currentMinutes: stats.todayMinutes,
-                  goalMinutes: stats.goalMinutes,
+                  ],
                 ),
-              ),
-              const SizedBox(height: AppDimensions.spacingXl),
+                const SizedBox(height: AppDimensions.spacingXl),
 
-              // Insights Grid
-              Row(
-                children: [
-                  Expanded(
-                    child: TopActivityCard(
-                      activityName: stats.topActivity?.label ?? 'No activity yet',
-                      percentage: stats.topActivityPercentage,
-                    ),
+                // Hero: Activity Progress Ring
+                Center(
+                  child: ActivityProgressRing(
+                    currentMinutes: stats.todayMinutes,
+                    goalMinutes: stats.goalMinutes,
                   ),
-                  const SizedBox(width: AppDimensions.spacingMd),
-                  Expanded(
-                    child: MoodLiftInsightCard(
-                      moodLiftPercentage: stats.moodLiftPercentage,
-                      hasEnoughData: stats.hasEnoughDataForInsight,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppDimensions.spacingXl),
+                ),
+                const SizedBox(height: AppDimensions.spacingXl),
 
-              // Recent Movement List
-              RecentMovementList(
-                activities: stats.recentActivities,
-              ),
-              const SizedBox(height: AppDimensions.spacingXxl),
-            ],
+                // Insights Grid
+                Row(
+                  children: [
+                    Expanded(
+                      child: TopActivityCard(
+                        activityName: stats.topActivity?.label ?? 'No activity yet',
+                        percentage: stats.topActivityPercentage,
+                      ),
+                    ),
+                    const SizedBox(width: AppDimensions.spacingMd),
+                    Expanded(
+                      child: MoodLiftInsightCard(
+                        moodLiftPercentage: stats.moodLiftPercentage,
+                        hasEnoughData: stats.hasEnoughDataForInsight,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppDimensions.spacingXl),
+
+                // Recent Movement List
+                RecentMovementList(
+                  activities: stats.recentActivities,
+                ),
+                const SizedBox(height: AppDimensions.spacingXxl),
+              ],
+            ),
           ),
         ),
         loading: () => const Center(

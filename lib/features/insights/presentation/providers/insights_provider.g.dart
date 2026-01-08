@@ -43,41 +43,6 @@ final statsRepositoryProvider = AutoDisposeProvider<StatsRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef StatsRepositoryRef = AutoDisposeProviderRef<StatsRepository>;
-String _$monthlyStatsHash() => r'fee6dba0ebd882a4b9d8b97dfc0871f5bb44a051';
-
-/// See also [monthlyStats].
-@ProviderFor(monthlyStats)
-final monthlyStatsProvider = AutoDisposeFutureProvider<MonthlyStats>.internal(
-  monthlyStats,
-  name: r'monthlyStatsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$monthlyStatsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef MonthlyStatsRef = AutoDisposeFutureProviderRef<MonthlyStats>;
-String _$weeklyCorrelationHash() => r'c0ec951bed0055b29c32dd6633e95297d59a1325';
-
-/// See also [weeklyCorrelation].
-@ProviderFor(weeklyCorrelation)
-final weeklyCorrelationProvider =
-    AutoDisposeFutureProvider<WeeklyCorrelation>.internal(
-      weeklyCorrelation,
-      name: r'weeklyCorrelationProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$weeklyCorrelationHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef WeeklyCorrelationRef = AutoDisposeFutureProviderRef<WeeklyCorrelation>;
 String _$selectedMonthHash() => r'1a0aa98508e3029d9dd0fd4ab78935f19081f66e';
 
 /// See also [SelectedMonth].
@@ -94,5 +59,42 @@ final selectedMonthProvider =
     );
 
 typedef _$SelectedMonth = AutoDisposeNotifier<DateTime>;
+String _$monthlyStatsNotifierHash() =>
+    r'aab9f87abf5f71d128336f1ad54a070e6cbd1910';
+
+/// See also [MonthlyStatsNotifier].
+@ProviderFor(MonthlyStatsNotifier)
+final monthlyStatsNotifierProvider =
+    AsyncNotifierProvider<MonthlyStatsNotifier, MonthlyStats>.internal(
+      MonthlyStatsNotifier.new,
+      name: r'monthlyStatsNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$monthlyStatsNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$MonthlyStatsNotifier = AsyncNotifier<MonthlyStats>;
+String _$weeklyCorrelationNotifierHash() =>
+    r'fe044023828b1092c491d1c509723b1c1af67f39';
+
+/// See also [WeeklyCorrelationNotifier].
+@ProviderFor(WeeklyCorrelationNotifier)
+final weeklyCorrelationNotifierProvider =
+    AsyncNotifierProvider<
+      WeeklyCorrelationNotifier,
+      WeeklyCorrelation
+    >.internal(
+      WeeklyCorrelationNotifier.new,
+      name: r'weeklyCorrelationNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$weeklyCorrelationNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$WeeklyCorrelationNotifier = AsyncNotifier<WeeklyCorrelation>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

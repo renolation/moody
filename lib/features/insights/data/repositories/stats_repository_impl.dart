@@ -8,14 +8,14 @@ class StatsRepositoryImpl implements StatsRepository {
   StatsRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<MonthlyStats> getMonthlyStats(int year, int month) async {
-    final model = await remoteDataSource.getMonthlyStats(year, month);
+  Future<MonthlyStats> getMonthlyStats(int year, int month, {String? userId}) async {
+    final model = await remoteDataSource.getMonthlyStats(year, month, userId: userId);
     return model.toEntity();
   }
 
   @override
-  Future<WeeklyCorrelation> getWeeklyCorrelation() async {
-    final model = await remoteDataSource.getWeeklyCorrelation();
+  Future<WeeklyCorrelation> getWeeklyCorrelation({String? userId}) async {
+    final model = await remoteDataSource.getWeeklyCorrelation(userId: userId);
     return model.toEntity();
   }
 }

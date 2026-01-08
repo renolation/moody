@@ -116,7 +116,7 @@ final dailyQuoteProvider = AutoDisposeProvider<String>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DailyQuoteRef = AutoDisposeProviderRef<String>;
-String _$todayMoodsHash() => r'ff2627b23bcf04613559ee8c2d9cdd31a79ab729';
+String _$todayMoodsHash() => r'c42ac543b8de922982d7a3465617574905a3b3e0';
 
 /// See also [TodayMoods].
 @ProviderFor(TodayMoods)
@@ -132,7 +132,7 @@ final todayMoodsProvider =
     );
 
 typedef _$TodayMoods = AutoDisposeAsyncNotifier<List<MoodEntry>>;
-String _$todayActivitiesHash() => r'3dcd148bebf7e877fa641542de58b6566ed120c4';
+String _$todayActivitiesHash() => r'7fe9e51a24785b964baa4f152339f502f5be1181';
 
 /// See also [TodayActivities].
 @ProviderFor(TodayActivities)

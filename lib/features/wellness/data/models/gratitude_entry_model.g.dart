@@ -20,19 +20,22 @@ class GratitudeEntryModelAdapter extends TypeAdapter<GratitudeEntryModel> {
       id: (fields[0] as num).toInt(),
       items: (fields[1] as List).cast<String>(),
       date: fields[2] as DateTime,
+      userId: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GratitudeEntryModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.items)
       ..writeByte(2)
-      ..write(obj.date);
+      ..write(obj.date)
+      ..writeByte(3)
+      ..write(obj.userId);
   }
 
   @override

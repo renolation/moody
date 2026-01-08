@@ -14,7 +14,7 @@ class CorrelationChart extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final correlationAsync = ref.watch(weeklyCorrelationProvider);
+    final correlationAsync = ref.watch(weeklyCorrelationNotifierProvider);
 
     return GlassPanel(
       padding: const EdgeInsets.all(AppDimensions.spacingLg),

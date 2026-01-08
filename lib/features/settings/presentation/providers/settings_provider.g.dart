@@ -62,7 +62,7 @@ final isVipProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsVipRef = AutoDisposeProviderRef<bool>;
-String _$settingsHash() => r'948ed3ee92f812e0341aa9a9f554914f38dd37c5';
+String _$settingsHash() => r'ad67074614c65ed22fd283958a16f921b3a31c7c';
 
 /// See also [Settings].
 @ProviderFor(Settings)

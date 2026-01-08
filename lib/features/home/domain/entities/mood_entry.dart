@@ -4,6 +4,7 @@ import '../../../../core/enums/mood_score.dart';
 
 class MoodEntry extends Equatable {
   final int id;
+  final String? userId;
   final MoodScore score;
   final String? note;
   final List<String> tags;
@@ -11,6 +12,7 @@ class MoodEntry extends Equatable {
 
   const MoodEntry({
     required this.id,
+    this.userId,
     required this.score,
     this.note,
     this.tags = const [],
@@ -19,6 +21,7 @@ class MoodEntry extends Equatable {
 
   MoodEntry copyWith({
     int? id,
+    String? userId,
     MoodScore? score,
     String? note,
     List<String>? tags,
@@ -26,6 +29,7 @@ class MoodEntry extends Equatable {
   }) {
     return MoodEntry(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       score: score ?? this.score,
       note: note ?? this.note,
       tags: tags ?? this.tags,
@@ -34,5 +38,5 @@ class MoodEntry extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, score, note, tags, timestamp];
+  List<Object?> get props => [id, userId, score, note, tags, timestamp];
 }

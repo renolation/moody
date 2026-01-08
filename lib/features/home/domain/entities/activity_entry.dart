@@ -4,6 +4,7 @@ import '../../../../core/enums/activity_type.dart';
 
 class ActivityEntry extends Equatable {
   final int id;
+  final String? userId;
   final ActivityType type;
   final int duration; // in minutes
   final int intensity; // 1-3
@@ -11,6 +12,7 @@ class ActivityEntry extends Equatable {
 
   const ActivityEntry({
     required this.id,
+    this.userId,
     required this.type,
     required this.duration,
     this.intensity = 2,
@@ -19,6 +21,7 @@ class ActivityEntry extends Equatable {
 
   ActivityEntry copyWith({
     int? id,
+    String? userId,
     ActivityType? type,
     int? duration,
     int? intensity,
@@ -26,6 +29,7 @@ class ActivityEntry extends Equatable {
   }) {
     return ActivityEntry(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       type: type ?? this.type,
       duration: duration ?? this.duration,
       intensity: intensity ?? this.intensity,
@@ -34,5 +38,5 @@ class ActivityEntry extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, type, duration, intensity, timestamp];
+  List<Object?> get props => [id, userId, type, duration, intensity, timestamp];
 }

@@ -3,8 +3,8 @@ import '../models/mood_entry_model.dart';
 
 /// Remote data source for mood entries using BackendService abstraction.
 abstract class MoodRemoteDataSource {
-  Future<List<MoodEntryModel>> getMoods();
-  Future<List<MoodEntryModel>> getMoodsByDate(DateTime date);
+  Future<List<MoodEntryModel>> getMoods({String? userId});
+  Future<List<MoodEntryModel>> getMoodsByDate(DateTime date, {String? userId});
   Future<MoodEntryModel> addMood(MoodEntryModel mood);
   Future<void> deleteMood(int id);
   Future<int> getNextId();
@@ -19,18 +19,23 @@ class MoodRemoteDataSourceImpl implements MoodRemoteDataSource {
   MoodRemoteDataSourceImpl(this._backend);
 
   @override
-  Future<List<MoodEntryModel>> getMoods() async {
-    final data = await _backend.getAll(tableName, orderBy: 'timestamp');
+  Future<List<MoodEntryModel>> getMoods({String? userId}) async {
+    final data = await _backend.query(
+      tableName,
+      equalFilters: {'user_id': userId},
+      orderBy: 'timestamp',
+    );
     return data.map((json) => MoodEntryModel.fromJson(json)).toList();
   }
 
   @override
-  Future<List<MoodEntryModel>> getMoodsByDate(DateTime date) async {
+  Future<List<MoodEntryModel>> getMoodsByDate(DateTime date, {String? userId}) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     final data = await _backend.query(
       tableName,
+      equalFilters: {'user_id': userId},
       greaterThanOrEqual: {'timestamp': startOfDay.toIso8601String()},
       lessThan: {'timestamp': endOfDay.toIso8601String()},
       orderBy: 'timestamp',

@@ -5,8 +5,8 @@ import '../models/stats_model.dart';
 
 /// Remote data source for stats using BackendService abstraction.
 abstract class StatsRemoteDataSource {
-  Future<MonthlyStatsModel> getMonthlyStats(int year, int month);
-  Future<WeeklyCorrelationModel> getWeeklyCorrelation();
+  Future<MonthlyStatsModel> getMonthlyStats(int year, int month, {String? userId});
+  Future<WeeklyCorrelationModel> getWeeklyCorrelation({String? userId});
 }
 
 class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
@@ -18,7 +18,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
   StatsRemoteDataSourceImpl(this._backend);
 
   @override
-  Future<MonthlyStatsModel> getMonthlyStats(int year, int month) async {
+  Future<MonthlyStatsModel> getMonthlyStats(int year, int month, {String? userId}) async {
     final daysInMonth = DateTime(year, month + 1, 0).day;
     final dailyStats = <int, DayMoodStatsModel>{};
 
@@ -33,6 +33,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
 
     final moodsData = await _backend.query(
       moodsTable,
+      equalFilters: {'user_id': userId},
       greaterThanOrEqual: {'timestamp': startOfMonth.toIso8601String()},
       lessThan: {'timestamp': endOfMonth.toIso8601String()},
     );
@@ -40,6 +41,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
 
     final activitiesData = await _backend.query(
       activitiesTable,
+      equalFilters: {'user_id': userId},
       greaterThanOrEqual: {'timestamp': startOfMonth.toIso8601String()},
       lessThan: {'timestamp': endOfMonth.toIso8601String()},
     );
@@ -89,7 +91,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
   }
 
   @override
-  Future<WeeklyCorrelationModel> getWeeklyCorrelation() async {
+  Future<WeeklyCorrelationModel> getWeeklyCorrelation({String? userId}) async {
     final now = DateTime.now();
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
     final endOfWeek = startOfWeek.add(const Duration(days: 7));
@@ -98,6 +100,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
     // Fetch week's data
     final moodsData = await _backend.query(
       moodsTable,
+      equalFilters: {'user_id': userId},
       greaterThanOrEqual: {'timestamp': startOfWeek.toIso8601String()},
       lessThan: {'timestamp': endOfWeek.toIso8601String()},
     );
@@ -105,6 +108,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
 
     final activitiesData = await _backend.query(
       activitiesTable,
+      equalFilters: {'user_id': userId},
       greaterThanOrEqual: {'timestamp': startOfWeek.toIso8601String()},
       lessThan: {'timestamp': endOfWeek.toIso8601String()},
     );

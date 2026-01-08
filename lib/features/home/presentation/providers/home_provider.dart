@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/enums/mood_score.dart';
 import '../../../../core/enums/activity_type.dart';
 import '../../../../core/services/backend_service_provider.dart';
+import '../../../user/presentation/providers/user_provider.dart';
 import '../../domain/entities/mood_entry.dart';
 import '../../domain/entities/activity_entry.dart';
 import '../../domain/entities/journey_item.dart';
@@ -50,12 +51,14 @@ class TodayMoods extends _$TodayMoods {
   @override
   Future<List<MoodEntry>> build() async {
     final repository = ref.watch(moodRepositoryProvider);
-    return repository.getMoodsByDate(DateTime.now());
+    final user = ref.watch(currentUserProvider).valueOrNull;
+    return repository.getMoodsByDate(DateTime.now(), userId: user?.id);
   }
 
   Future<void> addMood(MoodScore score, {String? note}) async {
     final repository = ref.read(moodRepositoryProvider);
-    await repository.addMood(score: score, note: note);
+    final user = ref.read(currentUserProvider).valueOrNull;
+    await repository.addMood(score: score, note: note, userId: user?.id);
     ref.invalidateSelf();
   }
 
@@ -71,12 +74,14 @@ class TodayActivities extends _$TodayActivities {
   @override
   Future<List<ActivityEntry>> build() async {
     final repository = ref.watch(activityRepositoryProvider);
-    return repository.getActivitiesByDate(DateTime.now());
+    final user = ref.watch(currentUserProvider).valueOrNull;
+    return repository.getActivitiesByDate(DateTime.now(), userId: user?.id);
   }
 
   Future<void> addActivity(ActivityType type, {int duration = 30}) async {
     final repository = ref.read(activityRepositoryProvider);
-    await repository.addActivity(type: type, duration: duration);
+    final user = ref.read(currentUserProvider).valueOrNull;
+    await repository.addActivity(type: type, duration: duration, userId: user?.id);
     ref.invalidateSelf();
   }
 

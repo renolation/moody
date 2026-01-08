@@ -9,14 +9,14 @@ class GratitudeRepositoryImpl implements GratitudeRepository {
   GratitudeRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<GratitudeEntry>> getEntries() async {
-    final models = await remoteDataSource.getEntries();
+  Future<List<GratitudeEntry>> getEntries({String? userId}) async {
+    final models = await remoteDataSource.getEntries(userId: userId);
     return models.map((m) => m.toEntity()).toList();
   }
 
   @override
-  Future<GratitudeEntry?> getTodayEntry() async {
-    final entries = await getEntries();
+  Future<GratitudeEntry?> getTodayEntry({String? userId}) async {
+    final entries = await getEntries(userId: userId);
     final today = DateTime.now();
 
     try {
@@ -32,12 +32,13 @@ class GratitudeRepositoryImpl implements GratitudeRepository {
   }
 
   @override
-  Future<GratitudeEntry> addEntry(List<String> items) async {
+  Future<GratitudeEntry> addEntry(List<String> items, {String? userId}) async {
     final id = await remoteDataSource.getNextId();
     final model = GratitudeEntryModel(
       id: id,
       items: items,
       date: DateTime.now(),
+      userId: userId,
     );
     final result = await remoteDataSource.addEntry(model);
     return result.toEntity();

@@ -22,12 +22,16 @@ class MoodEntryModel extends HiveObject {
   @HiveField(4)
   final DateTime timestamp;
 
+  @HiveField(5)
+  final String? userId;
+
   MoodEntryModel({
     required this.id,
     required this.score,
     this.note,
     this.tags = const [],
     required this.timestamp,
+    this.userId,
   });
 
   factory MoodEntryModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,7 @@ class MoodEntryModel extends HiveObject {
       note: json['note'] as String?,
       tags: (json['tags'] as List?)?.cast<String>() ?? [],
       timestamp: DateTime.parse(json['timestamp'] as String),
+      userId: json['user_id'] as String?,
     );
   }
 
@@ -47,12 +52,14 @@ class MoodEntryModel extends HiveObject {
       'note': note,
       'tags': tags,
       'timestamp': timestamp.toIso8601String(),
+      'user_id': userId,
     };
   }
 
   MoodEntry toEntity() {
     return MoodEntry(
       id: id,
+      userId: userId,
       score: MoodScore.values.firstWhere((e) => e.value == score),
       note: note,
       tags: tags,
@@ -63,6 +70,7 @@ class MoodEntryModel extends HiveObject {
   factory MoodEntryModel.fromEntity(MoodEntry entity) {
     return MoodEntryModel(
       id: entity.id,
+      userId: entity.userId,
       score: entity.score.value,
       note: entity.note,
       tags: entity.tags,

@@ -22,12 +22,16 @@ class ActivityEntryModel extends HiveObject {
   @HiveField(4)
   final DateTime timestamp;
 
+  @HiveField(5)
+  final String? userId;
+
   ActivityEntryModel({
     required this.id,
     required this.type,
     required this.duration,
     this.intensity = 2,
     required this.timestamp,
+    this.userId,
   });
 
   factory ActivityEntryModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,7 @@ class ActivityEntryModel extends HiveObject {
       duration: json['duration'] as int,
       intensity: json['intensity'] as int? ?? 2,
       timestamp: DateTime.parse(json['timestamp'] as String),
+      userId: json['user_id'] as String?,
     );
   }
 
@@ -47,12 +52,14 @@ class ActivityEntryModel extends HiveObject {
       'duration': duration,
       'intensity': intensity,
       'timestamp': timestamp.toIso8601String(),
+      'user_id': userId,
     };
   }
 
   ActivityEntry toEntity() {
     return ActivityEntry(
       id: id,
+      userId: userId,
       type: ActivityType.values.firstWhere((e) => e.name == type),
       duration: duration,
       intensity: intensity,
@@ -63,6 +70,7 @@ class ActivityEntryModel extends HiveObject {
   factory ActivityEntryModel.fromEntity(ActivityEntry entity) {
     return ActivityEntryModel(
       id: entity.id,
+      userId: entity.userId,
       type: entity.type.name,
       duration: entity.duration,
       intensity: entity.intensity,

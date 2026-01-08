@@ -3,7 +3,7 @@ import '../models/gratitude_entry_model.dart';
 
 /// Remote data source for gratitude entries using BackendService abstraction.
 abstract class GratitudeRemoteDataSource {
-  Future<List<GratitudeEntryModel>> getEntries();
+  Future<List<GratitudeEntryModel>> getEntries({String? userId});
   Future<GratitudeEntryModel> addEntry(GratitudeEntryModel entry);
   Future<void> deleteEntry(int id);
   Future<int> getNextId();
@@ -18,8 +18,12 @@ class GratitudeRemoteDataSourceImpl implements GratitudeRemoteDataSource {
   GratitudeRemoteDataSourceImpl(this._backend);
 
   @override
-  Future<List<GratitudeEntryModel>> getEntries() async {
-    final data = await _backend.getAll(tableName, orderBy: 'date');
+  Future<List<GratitudeEntryModel>> getEntries({String? userId}) async {
+    final data = await _backend.query(
+      tableName,
+      equalFilters: {'user_id': userId},
+      orderBy: 'date',
+    );
     return data.map((json) => GratitudeEntryModel.fromJson(json)).toList();
   }
 

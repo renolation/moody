@@ -9,15 +9,15 @@ class SettingsRepositoryImpl implements SettingsRepository {
   SettingsRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<UserSettings> getSettings() async {
-    final model = await remoteDataSource.getSettings();
+  Future<UserSettings> getSettings({String? userId}) async {
+    final model = await remoteDataSource.getSettings(userId: userId);
     return model.toEntity();
   }
 
   @override
-  Future<UserSettings> updateSettings(UserSettings settings) async {
+  Future<UserSettings> updateSettings(UserSettings settings, {String? userId}) async {
     final model = UserSettingsModel.fromEntity(settings);
-    final result = await remoteDataSource.updateSettings(model);
+    final result = await remoteDataSource.updateSettings(model, userId: userId);
     return result.toEntity();
   }
 }

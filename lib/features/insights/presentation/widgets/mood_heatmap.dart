@@ -13,7 +13,7 @@ class MoodHeatmap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statsAsync = ref.watch(monthlyStatsProvider);
+    final statsAsync = ref.watch(monthlyStatsNotifierProvider);
     final selectedMonth = ref.watch(selectedMonthProvider);
 
     return GlassPanel(

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/services/backend_service_provider.dart';
+import '../../../user/presentation/providers/user_provider.dart';
 import '../../domain/entities/user_settings.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../data/datasources/settings_remote_data_source.dart';
@@ -30,7 +31,8 @@ class Settings extends _$Settings {
   @override
   Future<UserSettings> build() async {
     final repository = ref.watch(settingsRepositoryProvider);
-    return repository.getSettings();
+    final user = ref.watch(currentUserProvider).valueOrNull;
+    return repository.getSettings(userId: user?.id);
   }
 
   Future<void> updateUserName(String name) async {
@@ -77,7 +79,8 @@ class Settings extends _$Settings {
 
   Future<void> _updateSettings(UserSettings settings) async {
     final repository = ref.read(settingsRepositoryProvider);
-    await repository.updateSettings(settings);
+    final user = ref.read(currentUserProvider).valueOrNull;
+    await repository.updateSettings(settings, userId: user?.id);
     ref.invalidateSelf();
   }
 }

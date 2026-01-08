@@ -5,6 +5,7 @@ import '../../../../core/enums/activity_type.dart';
 import '../../../home/domain/entities/activity_entry.dart';
 import '../../../home/domain/entities/mood_entry.dart';
 import '../../../home/presentation/providers/home_provider.dart';
+import '../../../user/presentation/providers/user_provider.dart';
 
 part 'activity_stats_provider.g.dart';
 
@@ -39,17 +40,25 @@ class ActivityStats extends Equatable {
       ];
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ActivityStatsNotifier extends _$ActivityStatsNotifier {
   @override
   Future<ActivityStats> build() async {
+    ref.keepAlive();
+
     final activityRepo = ref.watch(activityRepositoryProvider);
     final moodRepo = ref.watch(moodRepositoryProvider);
+    final user = ref.watch(currentUserProvider).valueOrNull;
 
-    final activities = await activityRepo.getActivities();
-    final moods = await moodRepo.getMoods();
+    final activities = await activityRepo.getActivities(userId: user?.id);
+    final moods = await moodRepo.getMoods(userId: user?.id);
 
     return _computeStats(activities, moods);
+  }
+
+  Future<void> refresh() async {
+    print('refresh');
+    ref.invalidateSelf();
   }
 
   ActivityStats _computeStats(

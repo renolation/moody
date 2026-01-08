@@ -12,7 +12,7 @@ class KeyInsightCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final correlationAsync = ref.watch(weeklyCorrelationProvider);
+    final correlationAsync = ref.watch(weeklyCorrelationNotifierProvider);
 
     return correlationAsync.when(
       data: (correlation) {

@@ -3,36 +3,44 @@ import '../models/user_settings_model.dart';
 
 /// Remote data source for user settings using BackendService abstraction.
 abstract class SettingsRemoteDataSource {
-  Future<UserSettingsModel> getSettings();
-  Future<UserSettingsModel> updateSettings(UserSettingsModel settings);
-  Future<void> initializeSettings(UserSettingsModel settings);
+  Future<UserSettingsModel> getSettings({String? userId});
+  Future<UserSettingsModel> updateSettings(UserSettingsModel settings, {String? userId});
+  Future<void> initializeSettings(UserSettingsModel settings, {String? userId});
 }
 
 class SettingsRemoteDataSourceImpl implements SettingsRemoteDataSource {
   static const String tableName = 'settings';
-  static const int defaultSettingsId = 1;
 
   final BackendService _backend;
 
   SettingsRemoteDataSourceImpl(this._backend);
 
   @override
-  Future<UserSettingsModel> getSettings() async {
-    final data = await _backend.getById(tableName, defaultSettingsId);
-    if (data != null) {
-      return UserSettingsModel.fromJson(data);
+  Future<UserSettingsModel> getSettings({String? userId}) async {
+    final data = await _backend.query(
+      tableName,
+      equalFilters: {'user_id': userId},
+      limit: 1,
+    );
+    if (data.isNotEmpty) {
+      return UserSettingsModel.fromJson(data.first);
     }
     return UserSettingsModel();
   }
 
   @override
-  Future<UserSettingsModel> updateSettings(UserSettingsModel settings) async {
-    final existing = await _backend.getById(tableName, defaultSettingsId);
+  Future<UserSettingsModel> updateSettings(UserSettingsModel settings, {String? userId}) async {
+    final existing = await _backend.query(
+      tableName,
+      equalFilters: {'user_id': userId},
+      limit: 1,
+    );
     final json = settings.toJson();
-    json['id'] = defaultSettingsId;
+    json['user_id'] = userId;
 
-    if (existing != null) {
-      final updated = await _backend.update(tableName, defaultSettingsId, json);
+    if (existing.isNotEmpty) {
+      final existingId = existing.first['id'];
+      final updated = await _backend.update(tableName, existingId, json);
       return UserSettingsModel.fromJson(updated);
     } else {
       final created = await _backend.insert(tableName, json);
@@ -41,11 +49,15 @@ class SettingsRemoteDataSourceImpl implements SettingsRemoteDataSource {
   }
 
   @override
-  Future<void> initializeSettings(UserSettingsModel settings) async {
-    final existing = await _backend.getById(tableName, defaultSettingsId);
-    if (existing == null) {
+  Future<void> initializeSettings(UserSettingsModel settings, {String? userId}) async {
+    final existing = await _backend.query(
+      tableName,
+      equalFilters: {'user_id': userId},
+      limit: 1,
+    );
+    if (existing.isEmpty) {
       final json = settings.toJson();
-      json['id'] = defaultSettingsId;
+      json['user_id'] = userId;
       await _backend.insert(tableName, json);
     }
   }

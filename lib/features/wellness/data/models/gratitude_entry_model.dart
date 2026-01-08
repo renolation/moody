@@ -15,10 +15,14 @@ class GratitudeEntryModel extends HiveObject {
   @HiveField(2)
   final DateTime date;
 
+  @HiveField(3)
+  final String? userId;
+
   GratitudeEntryModel({
     required this.id,
     required this.items,
     required this.date,
+    this.userId,
   });
 
   factory GratitudeEntryModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +30,7 @@ class GratitudeEntryModel extends HiveObject {
       id: json['id'] as int,
       items: List<String>.from(json['items'] as List),
       date: DateTime.parse(json['date'] as String),
+      userId: json['user_id'] as String?,
     );
   }
 
@@ -34,12 +39,14 @@ class GratitudeEntryModel extends HiveObject {
       'id': id,
       'items': items,
       'date': date.toIso8601String(),
+      'user_id': userId,
     };
   }
 
   GratitudeEntry toEntity() {
     return GratitudeEntry(
       id: id,
+      userId: userId,
       items: items,
       date: date,
     );
@@ -48,6 +55,7 @@ class GratitudeEntryModel extends HiveObject {
   factory GratitudeEntryModel.fromEntity(GratitudeEntry entity) {
     return GratitudeEntryModel(
       id: entity.id,
+      userId: entity.userId,
       items: entity.items,
       date: entity.date,
     );
