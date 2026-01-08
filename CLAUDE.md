@@ -172,7 +172,30 @@ You have access to these expert subagents - **USE THEM PROACTIVELY:**
 
 **State Management:** `home_view_model.dart` (Riverpod AsyncNotifier) aggregates data from Mood, Exercise, and Quote repositories.
 
----
+---### 🏃 Activity & Movement Screen (Detail View)
+
+**Purpose**: A dedicated dashboard to track physical habits and their impact on mental health.
+**Access**: Tapping the "Quick Log" header on Home or via Features grid.
+
+**Key Features**:
+- **Weekly Movement Ring (Hero)**:
+    - A large central circular progress indicator.
+    - Shows "Minutes Moved" vs "Daily Goal" (e.g., "45 / 60 min").
+    - **Visuals**: Soft teal gradient stroke with a frosted glass center.
+- **Activity Breakdown**:
+    - A simple bar or pie chart showing distribution (e.g., "70% Walking, 30% Yoga").
+- **The "After-Glow" Insight**:
+    - A specialized card showing: "Average Mood Score after Exercise: 4.2/5.0".
+    - Compares it to "Sedentary Mood Score: 3.1/5.0".
+    - **Visuals**: Slight glow effect to emphasize positive reinforcement.
+- **History List**:
+    - A clean, grouped list (Today, Yesterday, Last Week) of all activity logs.
+    - Allows **Edit** (change duration/intensity) and **Delete**.
+
+**State Management**:
+- `ActivityStatsNotifier`: `@riverpod` class that aggregates weekly totals and calculates the "After-Glow" delta.
+
+**Tech Stack**: `fl_chart` for rings/graphs, `CustomScrollView` + `SliverList` for the history.
 
 ### 📚 Features Tab (Wellness Library)
 

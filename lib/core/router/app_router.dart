@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/activity/presentation/screens/activity_screen.dart';
 import '../../features/insights/presentation/screens/insights_screen.dart';
 import '../../features/wellness/presentation/screens/wellness_screen.dart';
 import '../../features/wellness/presentation/screens/breathe_screen.dart';
@@ -26,6 +27,13 @@ final appRouter = GoRouter(
           name: 'home',
           pageBuilder: (context, state) => const NoTransitionPage(
             child: HomeScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/activity',
+          name: 'activity',
+          pageBuilder: (context, state) => const NoTransitionPage(
+            child: ActivityScreen(),
           ),
         ),
         GoRoute(

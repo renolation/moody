@@ -11,9 +11,10 @@ class AppShell extends StatelessWidget {
 
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
-    if (location.startsWith('/insights')) return 1;
-    if (location.startsWith('/wellness')) return 2;
-    if (location.startsWith('/settings')) return 3;
+    if (location.startsWith('/activity')) return 1;
+    if (location.startsWith('/insights')) return 2;
+    if (location.startsWith('/wellness')) return 3;
+    if (location.startsWith('/settings')) return 4;
     return 0;
   }
 
@@ -23,12 +24,15 @@ class AppShell extends StatelessWidget {
         context.go('/');
         break;
       case 1:
-        context.go('/insights');
+        context.go('/activity');
         break;
       case 2:
-        context.go('/wellness');
+        context.go('/insights');
         break;
       case 3:
+        context.go('/wellness');
+        break;
+      case 4:
         context.go('/settings');
         break;
     }
@@ -65,25 +69,32 @@ class AppShell extends StatelessWidget {
                   onTap: () => _onItemTapped(context, 0),
                 ),
                 _NavItem(
+                  icon: Icons.directions_run_outlined,
+                  selectedIcon: Icons.directions_run,
+                  label: 'Activity',
+                  isSelected: selectedIndex == 1,
+                  onTap: () => _onItemTapped(context, 1),
+                ),
+                _NavItem(
                   icon: Icons.insights_outlined,
                   selectedIcon: Icons.insights,
                   label: 'Insights',
-                  isSelected: selectedIndex == 1,
-                  onTap: () => _onItemTapped(context, 1),
+                  isSelected: selectedIndex == 2,
+                  onTap: () => _onItemTapped(context, 2),
                 ),
                 _NavItem(
                   icon: Icons.spa_outlined,
                   selectedIcon: Icons.spa,
                   label: 'Wellness',
-                  isSelected: selectedIndex == 2,
-                  onTap: () => _onItemTapped(context, 2),
+                  isSelected: selectedIndex == 3,
+                  onTap: () => _onItemTapped(context, 3),
                 ),
                 _NavItem(
                   icon: Icons.settings_outlined,
                   selectedIcon: Icons.settings,
                   label: 'Settings',
-                  isSelected: selectedIndex == 3,
-                  onTap: () => _onItemTapped(context, 3),
+                  isSelected: selectedIndex == 4,
+                  onTap: () => _onItemTapped(context, 4),
                 ),
               ],
             ),
