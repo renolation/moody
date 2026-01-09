@@ -62,21 +62,20 @@ final isVipProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsVipRef = AutoDisposeProviderRef<bool>;
-String _$settingsHash() => r'ad67074614c65ed22fd283958a16f921b3a31c7c';
+String _$settingsHash() => r'bbaa3e25e71305a425463357bcde5844e3853748';
 
 /// See also [Settings].
 @ProviderFor(Settings)
-final settingsProvider =
-    AutoDisposeAsyncNotifierProvider<Settings, UserSettings>.internal(
-      Settings.new,
-      name: r'settingsProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$settingsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final settingsProvider = AsyncNotifierProvider<Settings, UserSettings>.internal(
+  Settings.new,
+  name: r'settingsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$settingsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
-typedef _$Settings = AutoDisposeAsyncNotifier<UserSettings>;
+typedef _$Settings = AsyncNotifier<UserSettings>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -132,7 +132,7 @@ final todayMoodsProvider =
     );
 
 typedef _$TodayMoods = AutoDisposeAsyncNotifier<List<MoodEntry>>;
-String _$todayActivitiesHash() => r'7fe9e51a24785b964baa4f152339f502f5be1181';
+String _$todayActivitiesHash() => r'b8511fb2a767187b32a009ac7593f4aa1ecf0064';
 
 /// See also [TodayActivities].
 @ProviderFor(TodayActivities)

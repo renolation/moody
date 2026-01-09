@@ -26,13 +26,18 @@ class UserSettingsModelAdapter extends TypeAdapter<UserSettingsModel> {
       moodReminderHour: fields[6] == null ? 21 : (fields[6] as num).toInt(),
       moodReminderMinute: fields[7] == null ? 0 : (fields[7] as num).toInt(),
       theme: fields[8] == null ? 'dark' : fields[8] as String,
+      walkingDuration: fields[9] == null ? 30 : (fields[9] as num).toInt(),
+      runningDuration: fields[10] == null ? 30 : (fields[10] as num).toInt(),
+      yogaDuration: fields[11] == null ? 30 : (fields[11] as num).toInt(),
+      gymDuration: fields[12] == null ? 45 : (fields[12] as num).toInt(),
+      cyclingDuration: fields[13] == null ? 30 : (fields[13] as num).toInt(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserSettingsModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.userName)
       ..writeByte(1)
@@ -50,7 +55,17 @@ class UserSettingsModelAdapter extends TypeAdapter<UserSettingsModel> {
       ..writeByte(7)
       ..write(obj.moodReminderMinute)
       ..writeByte(8)
-      ..write(obj.theme);
+      ..write(obj.theme)
+      ..writeByte(9)
+      ..write(obj.walkingDuration)
+      ..writeByte(10)
+      ..write(obj.runningDuration)
+      ..writeByte(11)
+      ..write(obj.yogaDuration)
+      ..writeByte(12)
+      ..write(obj.gymDuration)
+      ..writeByte(13)
+      ..write(obj.cyclingDuration);
   }
 
   @override

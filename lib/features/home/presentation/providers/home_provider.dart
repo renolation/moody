@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/enums/mood_score.dart';
 import '../../../../core/enums/activity_type.dart';
 import '../../../../core/services/backend_service_provider.dart';
+import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../../user/presentation/providers/user_provider.dart';
 import '../../domain/entities/mood_entry.dart';
 import '../../domain/entities/activity_entry.dart';
@@ -78,10 +79,17 @@ class TodayActivities extends _$TodayActivities {
     return repository.getActivitiesByDate(DateTime.now(), userId: user?.id);
   }
 
-  Future<void> addActivity(ActivityType type, {int duration = 30}) async {
+  Future<void> addActivity(ActivityType type, {int? duration}) async {
     final repository = ref.read(activityRepositoryProvider);
     final user = ref.read(currentUserProvider).valueOrNull;
-    await repository.addActivity(type: type, duration: duration, userId: user?.id);
+    final settings = ref.read(settingsProvider).valueOrNull;
+
+    // Use provided duration, or settings duration, or fallback to enum default
+    final effectiveDuration = duration ??
+        settings?.getDurationForActivity(type) ??
+        type.defaultDuration;
+
+    await repository.addActivity(type: type, duration: effectiveDuration, userId: user?.id);
     ref.invalidateSelf();
   }
 

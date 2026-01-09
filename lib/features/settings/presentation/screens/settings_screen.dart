@@ -9,6 +9,7 @@ import 'dart:io';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/enums/activity_type.dart';
 import '../../../../core/widgets/glass_panel.dart';
 import '../../../../core/data/mock_data_initializer.dart';
 import '../../../user/presentation/providers/user_provider.dart';
@@ -25,16 +26,20 @@ class SettingsScreen extends ConsumerWidget {
 
     return SafeArea(
       child: settingsAsync.when(
-        data: (settings) => SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.screenPaddingH,
-            vertical: AppDimensions.spacingLg,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
+        data: (settings) => RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: () => ref.read(settingsProvider.notifier).refresh(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.screenPaddingH,
+              vertical: AppDimensions.spacingLg,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.maybePop(context),
@@ -301,6 +306,82 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppDimensions.spacingXl),
 
+              // Activity Defaults Section
+              const _SectionHeader(title: 'ACTIVITY DEFAULTS'),
+              const SizedBox(height: AppDimensions.spacingSm),
+              GlassPanel(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    _SettingsDurationPicker(
+                      icon: ActivityType.walking.icon,
+                      iconColor: AppColors.primary,
+                      title: ActivityType.walking.label,
+                      duration: settings.walkingDuration,
+                      onChanged: (duration) {
+                        ref.read(settingsProvider.notifier).updateActivityDuration(
+                          ActivityType.walking,
+                          duration,
+                        );
+                      },
+                    ),
+                    Container(height: 1, color: AppColors.glassHighlight),
+                    _SettingsDurationPicker(
+                      icon: ActivityType.running.icon,
+                      iconColor: Colors.orange,
+                      title: ActivityType.running.label,
+                      duration: settings.runningDuration,
+                      onChanged: (duration) {
+                        ref.read(settingsProvider.notifier).updateActivityDuration(
+                          ActivityType.running,
+                          duration,
+                        );
+                      },
+                    ),
+                    Container(height: 1, color: AppColors.glassHighlight),
+                    _SettingsDurationPicker(
+                      icon: ActivityType.yoga.icon,
+                      iconColor: Colors.purple,
+                      title: ActivityType.yoga.label,
+                      duration: settings.yogaDuration,
+                      onChanged: (duration) {
+                        ref.read(settingsProvider.notifier).updateActivityDuration(
+                          ActivityType.yoga,
+                          duration,
+                        );
+                      },
+                    ),
+                    Container(height: 1, color: AppColors.glassHighlight),
+                    _SettingsDurationPicker(
+                      icon: ActivityType.gym.icon,
+                      iconColor: Colors.red,
+                      title: ActivityType.gym.label,
+                      duration: settings.gymDuration,
+                      onChanged: (duration) {
+                        ref.read(settingsProvider.notifier).updateActivityDuration(
+                          ActivityType.gym,
+                          duration,
+                        );
+                      },
+                    ),
+                    Container(height: 1, color: AppColors.glassHighlight),
+                    _SettingsDurationPicker(
+                      icon: ActivityType.cycling.icon,
+                      iconColor: Colors.blue,
+                      title: ActivityType.cycling.label,
+                      duration: settings.cyclingDuration,
+                      onChanged: (duration) {
+                        ref.read(settingsProvider.notifier).updateActivityDuration(
+                          ActivityType.cycling,
+                          duration,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppDimensions.spacingXl),
+
               // Data & Privacy Section
               _SectionHeader(title: AppStrings.dataPrivacy),
               const SizedBox(height: AppDimensions.spacingSm),
@@ -357,6 +438,7 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: AppDimensions.spacingXl),
             ],
           ),
+        ),
         ),
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.sage500),
@@ -823,6 +905,174 @@ class _SettingsButton extends StatelessWidget {
                 color: AppColors.textMuted,
                 size: 20,
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsDurationPicker extends StatelessWidget {
+  const _SettingsDurationPicker({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.duration,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final int duration;
+  final void Function(int duration) onChanged;
+
+  static const List<int> _durationOptions = [15, 20, 30, 45, 60, 90, 120];
+
+  String get _formattedDuration {
+    if (duration >= 60) {
+      final hours = duration ~/ 60;
+      final mins = duration % 60;
+      if (mins == 0) {
+        return '${hours}h';
+      }
+      return '${hours}h ${mins}m';
+    }
+    return '${duration}m';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showDurationPicker(context),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: iconColor.withValues(alpha: 0.1),
+              ),
+              child: Icon(icon, color: iconColor, size: 18),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                _formattedDuration,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.textMuted,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDurationPicker(BuildContext context) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.darkBgSecondary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.textMuted.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Default $title Duration',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: WrapAlignment.center,
+              children: _durationOptions.map((option) {
+                final isSelected = option == duration;
+                final label = option >= 60
+                    ? '${option ~/ 60}h${option % 60 > 0 ? ' ${option % 60}m' : ''}'
+                    : '${option}m';
+                return GestureDetector(
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    onChanged(option);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primary
+                          : AppColors.glassBackground,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.glassBorder,
+                      ),
+                    ),
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: isSelected
+                            ? AppColors.darkBg
+                            : AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 24),
           ],
         ),
       ),

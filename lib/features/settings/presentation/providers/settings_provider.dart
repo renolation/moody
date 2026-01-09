@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/enums/activity_type.dart';
 import '../../../../core/services/backend_service_provider.dart';
 import '../../../user/presentation/providers/user_provider.dart';
 import '../../domain/entities/user_settings.dart';
@@ -26,13 +27,18 @@ SettingsRepository settingsRepository(Ref ref) {
 }
 
 // State Providers
-@riverpod
+@Riverpod(keepAlive: true)
 class Settings extends _$Settings {
   @override
   Future<UserSettings> build() async {
+    ref.keepAlive();
     final repository = ref.watch(settingsRepositoryProvider);
     final user = ref.watch(currentUserProvider).valueOrNull;
     return repository.getSettings(userId: user?.id);
+  }
+
+  Future<void> refresh() async {
+    ref.invalidateSelf();
   }
 
   Future<void> updateUserName(String name) async {
@@ -74,6 +80,18 @@ class Settings extends _$Settings {
   Future<void> setVipStatus(bool isVip) async {
     final current = state.valueOrNull ?? const UserSettings();
     final updated = current.copyWith(isVip: isVip);
+    await _updateSettings(updated);
+  }
+
+  Future<void> updateActivityDuration(ActivityType type, int duration) async {
+    final current = state.valueOrNull ?? const UserSettings();
+    final updated = switch (type) {
+      ActivityType.walking => current.copyWith(walkingDuration: duration),
+      ActivityType.running => current.copyWith(runningDuration: duration),
+      ActivityType.yoga => current.copyWith(yogaDuration: duration),
+      ActivityType.gym => current.copyWith(gymDuration: duration),
+      ActivityType.cycling => current.copyWith(cyclingDuration: duration),
+    };
     await _updateSettings(updated);
   }
 
