@@ -1,6 +1,7 @@
 import 'package:hive_ce/hive.dart';
 
 import '../../../../core/enums/activity_type.dart';
+import '../../../../core/extensions/date_time_extensions.dart';
 import '../../domain/entities/activity_entry.dart';
 
 part 'activity_entry_model.g.dart';
@@ -40,7 +41,7 @@ class ActivityEntryModel extends HiveObject {
       type: json['type'] as String,
       duration: json['duration'] as int,
       intensity: json['intensity'] as int? ?? 2,
-      timestamp: DateTime.parse(json['timestamp'] as String),
+      timestamp: DateTimeParser.parseToLocal(json['timestamp'] as String),
       userId: json['user_id'] as String?,
     );
   }
@@ -51,7 +52,7 @@ class ActivityEntryModel extends HiveObject {
       'type': type,
       'duration': duration,
       'intensity': intensity,
-      'timestamp': timestamp.toIso8601String(),
+      'timestamp': timestamp.toIso8601StringWithOffset(),
       'user_id': userId,
     };
   }

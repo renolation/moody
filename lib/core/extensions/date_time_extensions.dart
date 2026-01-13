@@ -48,4 +48,44 @@ extension DateTimeExtensions on DateTime {
   int get daysInMonth => DateTime(year, month + 1, 0).day;
 
   int get weekdayStartingMonday => weekday;
+
+  /// Serializes DateTime to ISO8601 string with timezone offset.
+  /// Example: 2024-01-13T10:00:00+07:00
+  String toIso8601StringWithOffset() {
+    final offset = timeZoneOffset;
+    final hours = offset.inHours.abs().toString().padLeft(2, '0');
+    final minutes = (offset.inMinutes.abs() % 60).toString().padLeft(2, '0');
+    final sign = offset.isNegative ? '-' : '+';
+    final offsetStr = '$sign$hours:$minutes';
+
+    // Format: YYYY-MM-DDTHH:MM:SS+HH:MM
+    final y = year.toString().padLeft(4, '0');
+    final m = month.toString().padLeft(2, '0');
+    final d = day.toString().padLeft(2, '0');
+    final h = hour.toString().padLeft(2, '0');
+    final min = minute.toString().padLeft(2, '0');
+    final s = second.toString().padLeft(2, '0');
+
+    return '$y-$m-${d}T$h:$min:$s$offsetStr';
+  }
+
+  /// Converts a UTC DateTime to local time.
+  DateTime toLocalTime() {
+    if (isUtc) {
+      return toLocal();
+    }
+    return this;
+  }
+}
+
+/// Static utility for parsing timestamps with timezone handling.
+class DateTimeParser {
+  /// Parses an ISO8601 string and converts to local time.
+  /// Handles: UTC (Z suffix), offset (+/-HH:MM), and plain timestamps.
+  static DateTime parseToLocal(String timestamp) {
+    final parsed = DateTime.parse(timestamp);
+    // DateTime.parse returns UTC if the string has 'Z' or offset
+    // Convert to local for consistent comparison with DateTime.now()
+    return parsed.toLocal();
+  }
 }

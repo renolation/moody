@@ -1,6 +1,7 @@
 import 'package:hive_ce/hive.dart';
 
 import '../../../../core/enums/mood_score.dart';
+import '../../../../core/extensions/date_time_extensions.dart';
 import '../../domain/entities/mood_entry.dart';
 
 part 'mood_entry_model.g.dart';
@@ -40,7 +41,7 @@ class MoodEntryModel extends HiveObject {
       score: json['score'] as int,
       note: json['note'] as String?,
       tags: (json['tags'] as List?)?.cast<String>() ?? [],
-      timestamp: DateTime.parse(json['timestamp'] as String),
+      timestamp: DateTimeParser.parseToLocal(json['timestamp'] as String),
       userId: json['user_id'] as String?,
     );
   }
@@ -51,7 +52,7 @@ class MoodEntryModel extends HiveObject {
       'score': score,
       'note': note,
       'tags': tags,
-      'timestamp': timestamp.toIso8601String(),
+      'timestamp': timestamp.toIso8601StringWithOffset(),
       'user_id': userId,
     };
   }

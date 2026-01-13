@@ -30,14 +30,15 @@ class ActivityRemoteDataSourceImpl implements ActivityRemoteDataSource {
 
   @override
   Future<List<ActivityEntryModel>> getActivitiesByDate(DateTime date, {String? userId}) async {
+    // Create local time boundaries and convert to UTC for backend query
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     final data = await _backend.query(
       tableName,
       equalFilters: {'user_id': userId},
-      greaterThanOrEqual: {'timestamp': startOfDay.toIso8601String()},
-      lessThan: {'timestamp': endOfDay.toIso8601String()},
+      greaterThanOrEqual: {'timestamp': startOfDay.toUtc().toIso8601String()},
+      lessThan: {'timestamp': endOfDay.toUtc().toIso8601String()},
       orderBy: 'timestamp',
     );
     return data.map((json) => ActivityEntryModel.fromJson(json)).toList();

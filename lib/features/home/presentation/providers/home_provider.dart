@@ -15,6 +15,7 @@ import '../../data/datasources/mood_remote_data_source.dart';
 import '../../data/datasources/activity_remote_data_source.dart';
 import '../../data/repositories/mood_repository_impl.dart';
 import '../../data/repositories/activity_repository_impl.dart';
+import '../../domain/exceptions/activity_overlap_exception.dart';
 
 part 'home_provider.g.dart';
 
@@ -88,6 +89,26 @@ class TodayActivities extends _$TodayActivities {
     final effectiveDuration = duration ??
         settings?.getDurationForActivity(type) ??
         type.defaultDuration;
+
+    // Check for overlap with ongoing activity
+    final currentActivities = state.valueOrNull ?? [];
+    if (currentActivities.isNotEmpty) {
+      // Find the most recent activity
+      final lastActivity = currentActivities.reduce(
+        (a, b) => a.timestamp.isAfter(b.timestamp) ? a : b,
+      );
+      final activityEndTime = lastActivity.timestamp.add(
+        Duration(minutes: lastActivity.duration),
+      );
+      final now = DateTime.now();
+
+      if (now.isBefore(activityEndTime)) {
+        throw ActivityOverlapException(
+          message: 'Activity in progress',
+          ongoingActivityEnd: activityEndTime,
+        );
+      }
+    }
 
     await repository.addActivity(type: type, duration: effectiveDuration, userId: user?.id);
     ref.invalidateSelf();

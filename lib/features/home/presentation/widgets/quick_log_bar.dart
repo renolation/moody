@@ -7,6 +7,7 @@ import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/enums/activity_type.dart';
 import '../../../../core/widgets/glass_panel.dart';
+import '../../domain/exceptions/activity_overlap_exception.dart';
 import '../providers/home_provider.dart';
 
 class QuickLogBar extends ConsumerWidget {
@@ -33,7 +34,7 @@ class QuickLogBar extends ConsumerWidget {
           children: [
             _QuickLogButton(
               type: ActivityType.walking,
-              onTap: () => _logActivity(ref, ActivityType.walking),
+              onTap: () => _logActivity(context, ref, ActivityType.walking),
               onLongPress: () => _showDurationPicker(
                 context,
                 ref,
@@ -43,7 +44,7 @@ class QuickLogBar extends ConsumerWidget {
             const SizedBox(width: AppDimensions.spacingSm),
             _QuickLogButton(
               type: ActivityType.running,
-              onTap: () => _logActivity(ref, ActivityType.running),
+              onTap: () => _logActivity(context, ref, ActivityType.running),
               onLongPress: () => _showDurationPicker(
                 context,
                 ref,
@@ -53,7 +54,7 @@ class QuickLogBar extends ConsumerWidget {
             const SizedBox(width: AppDimensions.spacingSm),
             _QuickLogButton(
               type: ActivityType.yoga,
-              onTap: () => _logActivity(ref, ActivityType.yoga),
+              onTap: () => _logActivity(context, ref, ActivityType.yoga),
               onLongPress: () => _showDurationPicker(
                 context,
                 ref,
@@ -63,7 +64,7 @@ class QuickLogBar extends ConsumerWidget {
             const SizedBox(width: AppDimensions.spacingSm),
             _QuickLogButton(
               type: ActivityType.gym,
-              onTap: () => _logActivity(ref, ActivityType.gym),
+              onTap: () => _logActivity(context, ref, ActivityType.gym),
               onLongPress: () => _showDurationPicker(
                 context,
                 ref,
@@ -76,9 +77,29 @@ class QuickLogBar extends ConsumerWidget {
     );
   }
 
-  void _logActivity(WidgetRef ref, ActivityType type) {
+  Future<void> _logActivity(
+    BuildContext context,
+    WidgetRef ref,
+    ActivityType type,
+  ) async {
     HapticFeedback.lightImpact();
-    ref.read(todayActivitiesProvider.notifier).addActivity(type);
+    try {
+      await ref.read(todayActivitiesProvider.notifier).addActivity(type);
+    } on ActivityOverlapException catch (e) {
+      HapticFeedback.heavyImpact();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.friendlyMessage),
+            backgroundColor: AppColors.sage700,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
+    }
   }
 
   void _showDurationPicker(
@@ -93,14 +114,35 @@ class QuickLogBar extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) => _DurationPicker(
+      builder: (sheetContext) => _DurationPicker(
         type: type,
-        onSelect: (duration) {
-          ref.read(todayActivitiesProvider.notifier).addActivity(
-                type,
-                duration: duration,
+        onSelect: (duration) async {
+          try {
+            await ref.read(todayActivitiesProvider.notifier).addActivity(
+                  type,
+                  duration: duration,
+                );
+            if (sheetContext.mounted) {
+              Navigator.pop(sheetContext);
+            }
+          } on ActivityOverlapException catch (e) {
+            HapticFeedback.heavyImpact();
+            if (sheetContext.mounted) {
+              Navigator.pop(sheetContext);
+            }
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(e.friendlyMessage),
+                  backgroundColor: AppColors.sage700,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
               );
-          Navigator.pop(context);
+            }
+          }
         },
       ),
     );
@@ -167,7 +209,7 @@ class _DurationPicker extends StatefulWidget {
   });
 
   final ActivityType type;
-  final void Function(int duration) onSelect;
+  final Future<void> Function(int duration) onSelect;
 
   @override
   State<_DurationPicker> createState() => _DurationPickerState();
